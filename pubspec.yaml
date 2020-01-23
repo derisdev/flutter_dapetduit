@@ -1,0 +1,55 @@
+name: dapetduit
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+  ironsource: ^0.1.1
+  fluttertoast: ^3.1.3
+  shared_preferences: ^0.5.6
+  intl: ^0.16.1
+  sqflite: ^1.2.0
+  path_provider: ^1.5.1
+  flutter_spinkit: ^4.1.1+1
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+  
+  assets:
+    - images/icon/coin.png
+    - images/icon/dana.jpeg
+    - images/icon/fb.png
+    - images/icon/fire.png
+    - images/icon/gopay.jpeg
+    - images/icon/offerwall.png
+    - images/icon/ovo.jpeg
+    - images/icon/star.png
+    - images/icon/video.png
+
+ 
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
