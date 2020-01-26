@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +34,31 @@ class _PayoutsState extends State<Payouts> {
        currentCoin = coin; 
       });
     }  
+  }
+
+  Future withdraw(String via, String amount, String userId) async{
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    int userId = prefs.getInt('user_id');
+    String phone = prefs.getString('phone');
+
+
+     String baseUrl =
+      "https://dapetduitrestapi.000webhostapp.com/api/v1/payment?token=$token";
+    var response = await http.post(baseUrl, headers: {
+      "Accept": "application/json"
+    }, body: {
+      'phone': phone,
+      'via': via,
+      'amount': amount,
+      'userId': userId.toString(),
+      'status': 'Pending',
+    });
+    if(response.statusCode == 201) {
+
+    }
+    print(response.statusCode);
   }
 
   @override

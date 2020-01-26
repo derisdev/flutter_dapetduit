@@ -10,12 +10,15 @@ class Invite extends StatefulWidget {
 class _InviteState extends State<Invite> {
 
   int currentCoin;
+  String refferalCode;
+  String linkRefferal;
 
 
   @override
   void initState() { 
     super.initState();
     getCurrentCoin();
+    readRefferalCode();
   }
 
 
@@ -34,6 +37,17 @@ class _InviteState extends State<Invite> {
       });
     }  
   }
+  
+    Future readRefferalCode() async { 
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+       refferalCode = prefs.getString('refferal_code_owner');
+       linkRefferal = prefs.getString('link_refferal'); 
+      });
+    }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,9 +123,12 @@ class _InviteState extends State<Invite> {
                           child: Card(
                           shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(color: Colors.orange)),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                Text('https://invite.dapetduit.id\n/?ic?22222H3L', style: TextStyle(fontSize: 17)),
+                                Container(
+                                  width: 170,
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: Text(linkRefferal==null? 'belum ada': linkRefferal, style: TextStyle(fontSize: 12, color: Colors.blue))),
                                 VerticalDivider(color: Colors.orange,),
                                 Text('Copy\nURL', style: TextStyle(fontSize: 20, color: Colors.orange))  
                               ]
@@ -127,19 +144,22 @@ class _InviteState extends State<Invite> {
                           child: Card(
                           shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(color: Colors.blue)),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.only(left: 30.0, top: 25),
                                   child: Column(
                                     children: <Widget>[
                                       Text('Kode Undangan Anda', style: TextStyle(color: Colors.blue)),
-                                      Text('2222H3L', style: TextStyle(fontSize: 25, color: Colors.blue)),
+                                      Text(refferalCode==null? 'belum ada' :refferalCode, style: TextStyle(fontSize: 25, color: Colors.blue)),
                                     ],
                                   ),
                                 ),
                                 VerticalDivider(color: Colors.blue,),
-                                Text('Copy\nURL', style: TextStyle(fontSize: 20, color: Colors.blue)),  
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Text('Copy\nKode', style: TextStyle(fontSize: 20, color: Colors.blue)),
+                                ),  
                               ]
                             ),
                           ),

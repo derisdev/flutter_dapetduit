@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:dapetduit/ui/user/phoneverification.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:dapetduit/helper/dbhelper.dart';
 import 'package:intl/intl.dart';
@@ -16,8 +20,8 @@ class Task extends StatefulWidget {
 
 class _TaskState extends State<Task>
     with IronSourceListener, WidgetsBindingObserver {
-
   int currentCoin;
+  int currentOfferwallDone;
 
   List<HistoryModel> listHistory = [];
 
@@ -36,22 +40,80 @@ class _TaskState extends State<Task>
     init();
   }
 
-  
-  
-
   Future getCurrentCoin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int coin = prefs.getInt('coin');
     if (coin == null) {
       setState(() {
-       currentCoin = 0; 
+        currentCoin = 0;
+      });
+    } else {
+      setState(() {
+        currentCoin = coin;
       });
     }
-    else {
+    savetoPrefs(currentCoin);
+  }
+
+  Future getCurrentOfferwallDone() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int currentDone = prefs.getInt('offerwallDone');
+    if (currentDone == null) {
       setState(() {
-       currentCoin = coin; 
+        currentOfferwallDone = 0;
       });
-    }  
+    } else {
+      setState(() {
+        currentOfferwallDone = currentDone;
+      });
+    }
+    print('currentOfferwallDone $currentOfferwallDone');
+
+    if (currentOfferwallDone == 2) {
+      giftRewards();
+    }
+  }
+
+  Future giftRewards() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String refferalCodeRefferer = prefs.getString('refferal_code_refferer');
+    String refferalCodeOwner = prefs.getString('refferal_code_owner');
+
+    String baseUrl =
+        "https://dapetduitrestapi.000webhostapp.com/api/v1/user/gift_refferal";
+    var response = await http.post(baseUrl, headers: {
+      "Accept": "application/json"
+    }, body: {
+      'refferal_code_refferer': refferalCodeRefferer,
+      'refferal_code_owner': refferalCodeOwner
+    });
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      setState(() {
+        currentCoin += 2;
+      });
+
+      savetoPrefs(currentCoin);
+      final jsonData = json.decode(response.body);
+      int rewards = jsonData['refferal_code_owner'];
+
+      DbHelper dbHelper = DbHelper();
+      DateTime now = DateTime.now();
+      String formattedDate = DateFormat('EEE d MMM').format(now);
+
+      int totalRewards = 2;
+
+      HistoryModel historyModel =
+          HistoryModel(formattedDate, 'Refferal', '+$totalRewards');
+      await dbHelper.insert(historyModel);
+
+      print('Data rewards refferal inserted');
+
+      prefs.setInt('rewards_from_refferal', rewards);
+    }
+    print(response.body);
+    prefs.setInt('offerwallDone', 5);
   }
 
   @override
@@ -99,14 +161,13 @@ class _TaskState extends State<Task>
       IronSource.showOfferwall();
     } else {
       Fluttertoast.showToast(
-        msg: "Offerwall tidak tersedia untuk saat ini",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIos: 1,
-        backgroundColor: Color(0xff24bd64),
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
+          msg: "Offerwall belum tersedia untuk saat ini. Tunggu beberapa saat lagi",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1,
+          backgroundColor: Color(0xff24bd64),
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -114,15 +175,14 @@ class _TaskState extends State<Task>
     if (await IronSource.isRewardedVideoAvailable()) {
       IronSource.showRewardedVideol();
     } else {
-       Fluttertoast.showToast(
-        msg: "Video Rewards tidak tersedia untuk saat ini",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIos: 1,
-        backgroundColor: Color(0xff24bd64),
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
+      Fluttertoast.showToast(
+          msg: "Video Rewards tidak tersedia untuk saat ini",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1,
+          backgroundColor: Color(0xff24bd64),
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -138,6 +198,13 @@ class _TaskState extends State<Task>
       appBar: AppBar(
         title: Text('Misi'),
         backgroundColor: Color(0xff24bd64),
+        leading: IconButton(
+          icon: Icon(Icons.phone),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PhoneVerification()));
+          },
+        ),
         actions: <Widget>[
           GestureDetector(
             onTap: () {
@@ -150,12 +217,12 @@ class _TaskState extends State<Task>
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
                   child: Center(
-                    child: currentCoin==null?  
-                    SpinKitThreeBounce(
-                      size: 30,
-                     color: Colors.white,
-                    )
-                    : Text('$currentCoin', style: TextStyle(fontSize: 30)),
+                    child: currentCoin == null
+                        ? SpinKitThreeBounce(
+                            size: 30,
+                            color: Colors.white,
+                          )
+                        : Text('$currentCoin', style: TextStyle(fontSize: 30)),
                   ),
                 )
               ],
@@ -183,15 +250,14 @@ class _TaskState extends State<Task>
                         title: Text('Iron Source Offer Wall'),
                         subtitle: Text('Unlimited credits. Complete task'),
                         trailing: RaisedButton(
-                          color: Color(0xff24bd64),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
-                          child: Text(
-                            '+2000',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: showOfferwall
-                        ),
+                            color: Color(0xff24bd64),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                            child: Text(
+                              '+2000',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: showOfferwall),
                         onTap: () {}),
                     Divider(),
                     ListTile(
@@ -199,15 +265,14 @@ class _TaskState extends State<Task>
                         title: Text('Tonton Video'),
                         subtitle: Text('Dapatkan koin untuk setiap view'),
                         trailing: RaisedButton(
-                          color: Color(0xff24bd64),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
-                          child: Text(
-                            '+20',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: showRewardedVideo
-                        ),
+                            color: Color(0xff24bd64),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                            child: Text(
+                              '+20',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: showRewardedVideo),
                         onTap: () {}),
                   ],
                 ),
@@ -335,20 +400,27 @@ class _TaskState extends State<Task>
   @override
   void onGetOfferwallCreditsFailed(IronSourceError error) {
     print("onGetOfferwallCreditsFailed : ${error.toString()}");
-
   }
 
   @override
   void onOfferwallAdCredited(OfferwallCredit reward) {
     print("onOfferwallAdCredited : ${reward.credits}");
     setState(() {
-     currentCoin += reward.credits; 
+      currentCoin += reward.credits;
     });
 
-    savetoPrefs(reward.credits, currentCoin);
+    savetoPrefs(currentCoin);
 
     saveHistory(reward.credits, 'Offerwall Rewards');
 
+    //memberikan rewards rfferal ketika user menyelesaikan 2 offerwall
+
+    setState(() {
+      currentOfferwallDone += 1;
+    });
+
+    cekDone(currentOfferwallDone);
+    getCurrentOfferwallDone();
 
   }
 
@@ -386,11 +458,11 @@ class _TaskState extends State<Task>
     print("onRewardedVideoAdClosed");
 
     int coin = 2;
-    
+
     setState(() {
-     currentCoin += coin; 
+      currentCoin += coin;
     });
-    savetoPrefs(coin, currentCoin);
+    savetoPrefs(currentCoin);
     rewardConfirm(context, coin);
     saveHistory(coin, 'Video Rewards');
   }
@@ -429,58 +501,49 @@ class _TaskState extends State<Task>
   }
 }
 
+Future<Null> rewardConfirm(BuildContext context, int coin) async {
+  await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          children: <Widget>[
+            SimpleDialogOption(
+                onPressed: () {},
+                child: Container(child: Center(child: Text('Great!!')))),
+            SimpleDialogOption(
+                onPressed: () {},
+                child: Text('Kamu Mendapatkan koin sebesar: $coin'))
+          ],
+        );
+      });
+}
 
+Future savetoPrefs(int currentCoin) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
+  prefs.setInt('coin', currentCoin);
 
+  print('saved $currentCoin');
+}
 
+saveHistory(int coin, String from) async {
+  DbHelper dbHelper = DbHelper();
 
-  Future<Null> rewardConfirm(BuildContext context, int coin) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            children: <Widget>[
-              SimpleDialogOption(
-                  onPressed: () {
-                  },
-                  child: Container(child: Center(child: Text('Great!!')))),
-              SimpleDialogOption(
-                onPressed: () {
-                },
-                child: Text('Kamu Mendapatkan koin sebesar: $coin')
-              )
-            ],
-          );
-        });
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('EEE d MMM').format(now);
+
+  HistoryModel historyModel =
+      HistoryModel(formattedDate, from, '+${coin.toString()}');
+  await dbHelper.insert(historyModel);
+
+  print('object created');
+}
+
+Future cekDone(int currentOfferwallDone) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('offerwallDone', currentOfferwallDone);
   
-  }
-
-  Future savetoPrefs(int coin, int currentCoin)  async {
-            
-    int newCoin = coin+currentCoin;
-
-    
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('coin', newCoin);
-
-    print('saved $newCoin');
-  }
-
-
-  saveHistory(int coin, String from) async {
-
-    DbHelper dbHelper = DbHelper();
-    
-
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEE d MMM').format(now);
-
-    HistoryModel historyModel = HistoryModel(formattedDate, from, '+${coin.toString()}');
-     await dbHelper.insert(historyModel);
-
-    print('object created');
-  }
-
+}
 
 class BannerAdListener extends IronSourceBannerListener {
   @override
@@ -512,8 +575,4 @@ class BannerAdListener extends IronSourceBannerListener {
   void onBannerAdScreenPresented() {
     print("onBannerAdScreenPresented");
   }
-
-
-
-
 }

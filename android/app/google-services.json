@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "627440497645",
+    "firebase_url": "https://dapet-duit.firebaseio.com",
+    "project_id": "dapet-duit",
+    "storage_bucket": "dapet-duit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627440497645:android:b5d0e40aba3f366c9e6de4",
+        "android_client_info": {
+          "package_name": "id.deris.dapetduit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627440497645-5aj2t7gh15iranjk1rofgadtv4tdq9o1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.deris.dapetduit",
+            "certificate_hash": "5ded5b50405b1fb464d1d9b1daa091e2029845c5"
+          }
+        },
+        {
+          "client_id": "627440497645-b4dnr3iqr1ubde1k03rtr2t59b6utgjn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqfBn4ZwNCZySYcV6jcTjMKlkuz3EntAU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627440497645-b4dnr3iqr1ubde1k03rtr2t59b6utgjn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

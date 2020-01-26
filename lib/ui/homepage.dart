@@ -50,7 +50,6 @@ class HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.grey.withOpacity(0.7),   
         onTap: onTap,
       ),
-      // membuat objek dari kelas TabBarView
       body: pages.elementAt(selectedIndex),
     );
   }

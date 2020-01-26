@@ -6,7 +6,7 @@
    
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="dapetduit"
+        android:label="DapetDuit"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.ironsource.sdk.controller.ControllerActivity"
