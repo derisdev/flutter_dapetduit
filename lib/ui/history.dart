@@ -15,17 +15,15 @@ class _HistoryState extends State<History> {
   DbHelper dbHelper = DbHelper();
   int count = 0;
   List<HistoryModel> historyList;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    isLoading = true;
     historyList = List<HistoryModel>();
     updateListView();
     
-    setState(() {
-    historyList.sort((b, a)=> a.id.compareTo(b.id));
-    });
-
   }
 
     void updateListView() {
@@ -36,6 +34,7 @@ class _HistoryState extends State<History> {
         setState(() {
           this.historyList = contactList;
           this.count = contactList.length;
+          isLoading = false;
         });
       });
     });
@@ -50,40 +49,36 @@ class _HistoryState extends State<History> {
         backgroundColor: Color(0xff24bd64),
         elevation: 7.0,
       ),
-      body: Column(
-        children: <Widget>[
-          ListTile(
-            leading: Text('Time', style: TextStyle(fontSize: 20, color: Color(0xff24bd64),),),
-            title: Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: Text('From',style: TextStyle(fontSize: 20, color: Color(0xff24bd64),)),
-            ),
-            trailing: Text('Change', style: TextStyle(fontSize: 20, color: Color(0xff24bd64),)),
+      body: isLoading?  Container(
+        alignment: Alignment.center,
+        child: Center(
+          child: SpinKitThreeBounce(
+            size: 60,
+            color: Color(0xff24bd64),
           ),
-          Divider(color: Colors.black,),
-          Expanded(
-            child: historyList.isNotEmpty? ListView.builder(
-              itemCount: historyList.length,
-              itemBuilder: (context, index){
-                return ListTile(
-                  leading: Text(historyList[index].time, style: TextStyle(fontSize: 18)),
-                  title: Text(historyList[index].src, style: TextStyle(fontSize: 18)),
-                  trailing: Text(historyList[index].coin, style: TextStyle(fontSize: 18)),
-                );
-              },
-            ) :
-            Container(
-              alignment: Alignment.center,
-              child: Center(
-                child: SpinKitThreeBounce(
-                  size: 60,
-                  color: Color(0xff24bd64),
-                ),
-              ),
-            )
-          )
-        ],
+        ),
+      ):  historyList.isNotEmpty? ListView.builder(
+        itemCount: historyList.length,
+        itemBuilder: (context, index){
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Card(
+              child: ListTile(
+              title: Text(historyList[index].src, style: TextStyle(fontSize: 18)),
+              subtitle: Text(historyList[index].time),
+              trailing: Text(historyList[index].coin, style: TextStyle(fontSize: 18, color: Colors.amber)),
+            ),
+            ),
+          );
+        },
+      ) :
+        Container(
+        alignment: Alignment.center,
+        child: Center(
+          child: Text('Belum ada history')
+        ),
       ),
+    
     );
   }
 }

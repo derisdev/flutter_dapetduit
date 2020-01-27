@@ -1,7 +1,7 @@
-import 'package:dapetduit/ui/widget/moretask.dart';
-import 'package:dapetduit/ui/widget/payouts.dart';
-import 'package:dapetduit/ui/widget/invite.dart';
-import 'package:dapetduit/ui/widget/task.dart';
+import 'package:dapetduit/ui/widget/homewidget/moretask.dart';
+import 'package:dapetduit/ui/widget/homewidget/payouts.dart';
+import 'package:dapetduit/ui/widget/homewidget/invite.dart';
+import 'package:dapetduit/ui/widget/homewidget/task.dart';
 import 'package:flutter/material.dart';
 
 
@@ -14,6 +14,7 @@ class HomePageState extends State<HomePage> {
   
   final pages = [
     Task(),
+    MoreTask(),
     Payouts(),
     Invite()
   ];
@@ -34,6 +35,10 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note, size: 35,),
             title: Text('Misi')
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.event_available, size: 35),
+            title: Text('Lebih Banyak')
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.card_giftcard, size: 35),

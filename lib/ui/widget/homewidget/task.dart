@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:http/http.dart' as http;
 import 'package:dapetduit/ui/user/phoneverification.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -161,7 +162,8 @@ class _TaskState extends State<Task>
       IronSource.showOfferwall();
     } else {
       Fluttertoast.showToast(
-          msg: "Offerwall belum tersedia untuk saat ini. Tunggu beberapa saat lagi",
+          msg:
+              "Offerwall belum tersedia untuk saat ini. Tunggu beberapa saat lagi",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIos: 1,
@@ -194,163 +196,250 @@ class _TaskState extends State<Task>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Misi'),
-        backgroundColor: Color(0xff24bd64),
-        leading: IconButton(
-          icon: Icon(Icons.phone),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PhoneVerification()));
-          },
-        ),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => History()));
-            },
-            child: Row(
-              children: <Widget>[
-                Image.asset('images/icon/coin.png'),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Center(
-                    child: currentCoin == null
-                        ? SpinKitThreeBounce(
-                            size: 30,
-                            color: Colors.white,
-                          )
-                        : Text('$currentCoin', style: TextStyle(fontSize: 30)),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+    return Stack(children: <Widget>[
+      Image.asset(
+        "images/background.jpeg",
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
       ),
-      backgroundColor: Color(0xffefeff4),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 5),
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(10),
-                child: Text('Rewarded Task'),
-              ),
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                        leading: Image.asset('images/icon/offerwall.png'),
-                        title: Text('Iron Source Offer Wall'),
-                        subtitle: Text('Unlimited credits. Complete task'),
-                        trailing: RaisedButton(
-                            color: Color(0xff24bd64),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            child: Text(
-                              '+2000',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: showOfferwall),
-                        onTap: () {}),
-                    Divider(),
-                    ListTile(
-                        leading: Image.asset('images/icon/video.png'),
-                        title: Text('Tonton Video'),
-                        subtitle: Text('Dapatkan koin untuk setiap view'),
-                        trailing: RaisedButton(
-                            color: Color(0xff24bd64),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            child: Text(
-                              '+20',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: showRewardedVideo),
-                        onTap: () {}),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(10),
-                child: Text('Misi Pemula'),
-              ),
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      leading: Image.asset('images/icon/star.png'),
-                      title: Text('Misi Review'),
-                      trailing: RaisedButton(
-                        color: Color(0xff24bd64),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        child: Text(
-                          '+200',
-                          style: TextStyle(color: Colors.white),
+      Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            leading: Container(
+                padding: EdgeInsets.all(15),
+                child: Image.asset('images/icon/menu.png')),
+            actions: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => History()));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Colors.white),
+                    color: Color(0xff24bd64),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset('images/icon/coin.png'),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Center(
+                          child: currentCoin == null
+                              ? SpinKitThreeBounce(
+                                  size: 30,
+                                  color: Colors.white,
+                                )
+                              : Text('$currentCoin',
+                                  style: TextStyle(fontSize: 30)),
                         ),
-                        onPressed: () {},
-                      ),
-                    ),
-                    ListTile(
-                      leading: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Image.asset(
-                          'images/icon/fb.png',
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                      title: Text('Misi Facebook'),
-                      trailing: RaisedButton(
-                        color: Color(0xff24bd64),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        child:
-                            Text('+100', style: TextStyle(color: Colors.white)),
-                        onPressed: () {},
-                      ),
-                    ),
-                    ListTile(
-                      leading: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Icon(
-                          Icons.people_outline,
-                          size: 40,
-                          color: Colors.cyan,
-                        ),
-                      ),
-                      title: Text('Undang Teman'),
-                      trailing: RaisedButton(
-                        color: Color(0xff24bd64),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        child: Icon(
-                          Icons.monetization_on,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
           ),
-        ),
-      ),
-    );
+          body: Stack(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 40),
+                padding: EdgeInsets.only(top: 50),
+                decoration: new BoxDecoration(
+                    color: Color(0xffefeff4),
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(40.0),
+                        topRight: const Radius.circular(40.0))),
+                child: SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Container(
+                          height: 200,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 12),
+                                      child: Image.asset(
+                                        'images/icon/is.png',
+                                        height: 35,
+                                        width: 35,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text('Iron Source Offerwall',
+                                          style: TextStyle(fontSize: 20)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: 125,
+                                  width: 305,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      'images/icon/isbanner.jpg',
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 200,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 12),
+                                      child: Image.asset(
+                                        'images/icon/is.png',
+                                        height: 35,
+                                        width: 35,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text('Iron Source Offerwall',
+                                          style: TextStyle(fontSize: 20)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: 125,
+                                  width: 305,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      'images/icon/isbanner.jpg',
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 200,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 12),
+                                      child: Image.asset(
+                                        'images/icon/is.png',
+                                        height: 35,
+                                        width: 35,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text('Iron Source Offerwall',
+                                          style: TextStyle(fontSize: 20)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: 125,
+                                  width: 300,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      'images/icon/isbanner.jpg',
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                      margin: EdgeInsets.only(top: 50),
+                      width: MediaQuery.of(context).size.width - 50,
+                      height: 30.0,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.grey.withOpacity(0.2)),
+                      child: Center(
+                          child: Text('Misi Offerwall',
+                              style: TextStyle(
+                                fontSize: 15,
+                              )))),
+                ),
+              )
+            ],
+          ))
+    ]);
   }
 
   @override
@@ -421,7 +510,6 @@ class _TaskState extends State<Task>
 
     cekDone(currentOfferwallDone);
     getCurrentOfferwallDone();
-
   }
 
   @override
@@ -542,7 +630,6 @@ saveHistory(int coin, String from) async {
 Future cekDone(int currentOfferwallDone) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('offerwallDone', currentOfferwallDone);
-  
 }
 
 class BannerAdListener extends IronSourceBannerListener {

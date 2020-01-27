@@ -46,6 +46,13 @@ flutter:
     - images/icon/ovo.jpeg
     - images/icon/star.png
     - images/icon/video.png
+    - images/icon/kalendar.png
+    - images/icon/people.png
+    - images/icon/is.png
+    - images/icon/isbanner.jpg
+    - images/icon/menu.png
+    - images/background.jpeg
+
 
  
   # fonts:
