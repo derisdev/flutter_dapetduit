@@ -218,11 +218,7 @@ class _TaskState extends State<Task>
                       MaterialPageRoute(builder: (context) => History()));
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.white),
-                    color: Color(0xff24bd64),
-                  ),
+                  
                   child: Row(
                     children: <Widget>[
                       Image.asset('images/icon/coin.png'),

@@ -168,9 +168,6 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
             ),
           ),
         ),
-        SizedBox(
-          height: 150,
-        )
       ],
     ));
   }
