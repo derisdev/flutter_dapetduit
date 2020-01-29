@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:http/http.dart' as http;
 import 'package:dapetduit/ui/user/phoneverification.dart';
@@ -210,7 +211,13 @@ class _TaskState extends State<Task>
             backgroundColor: Colors.transparent,
             leading: Container(
                 padding: EdgeInsets.all(15),
-                child: Image.asset('images/icon/menu.png')),
+                child: GestureDetector(
+                  onTap: (){
+                     Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => MenuProfile()
+                ));
+                  },
+                  child: Image.asset('images/icon/menu.png'))),
             actions: <Widget>[
               GestureDetector(
                 onTap: () {

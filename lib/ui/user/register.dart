@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dapetduit/service/fetchdata.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,6 +26,9 @@ class _RegisterState extends State<Register> {
   TextEditingController refferalController = TextEditingController();
 
   String refferalCode = "";
+
+  FetchData fetchData = new FetchData();
+
 
   @override
   void initState() {
@@ -63,12 +67,12 @@ class _RegisterState extends State<Register> {
       _isLoading = true;
     });
     String baseUrl =
-        "https://dapetduitrestapi.000webhostapp.com/api/v1/user/register";
+        "https://duitrest.000webhostapp.com/api/v1/user/register";
     var response = await http.post(baseUrl, headers: {
       "Accept": "application/json"
     }, body: {
       'name': '${usernameController.text}',
-      'refferal_code': '${refferalController.text}'
+      'refferal': '${refferalController.text}'
     });
     if (response.statusCode == 201) {
       final jsonData = json.decode(response.body);
@@ -94,7 +98,8 @@ class _RegisterState extends State<Register> {
         prefs.setString('link_refferal', link.toString());
       });
 
-      saveRefferal(refferalOwner, userId);
+      fetchData.createRefferal(refferalOwner, userId, token);
+      fetchData.createRewards(userId, token);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -132,23 +137,6 @@ class _RegisterState extends State<Register> {
         print(response.body);
         _isLoading = false;
       });
-  }
-
-
-  Future saveRefferal(String refferalCode, int userid) async {
-     String baseUrl =
-        "https://dapetduitrestapi.000webhostapp.com/api/v1/user/create_refferal";
-      var response = await http.post(baseUrl, headers: {
-      "Accept": "application/json"
-    }, body: {
-      'refferal_code': refferalCode,
-      'user_id': userid.toString()
-    });
-    if(response.statusCode==201) {
-      print('refferal created');
-    }
-    print(response.statusCode);
-    print(response.body);
   }
 
 

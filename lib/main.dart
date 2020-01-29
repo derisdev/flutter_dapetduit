@@ -1,3 +1,4 @@
+import 'package:dapetduit/test.dart';
 import 'package:dapetduit/ui/homepage.dart';
 import 'package:dapetduit/ui/splash.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: HomePage()
+      home: TestClass()
     );
   }
 }

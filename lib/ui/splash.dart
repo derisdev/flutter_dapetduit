@@ -31,7 +31,6 @@ class _SplashState extends State<Splash> {
         Duration(seconds: 2),
         () => checkInternet().then((internet) {
               if (internet != null && internet) {
-                getRewards();
 
                 Timer(
                     Duration(seconds: 3),
@@ -135,58 +134,6 @@ class _SplashState extends State<Splash> {
             ));
   }
 
-  Future getRewards() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    int userId = prefs.getInt('user_id');
-    int recentRewards = prefs.getInt('rewards_from_refferal');
-
-    if (recentRewards == null) {
-      recentRewards = 0;
-    }
-
-    String baseUrl =
-        "https://dapetduitrestapi.000webhostapp.com/api/v1/user/show_refferal";
-    var response = await http.post(baseUrl, headers: {
-      "Accept": "application/json"
-    }, body: {
-      'user_id': userId.toString(),
-    });
-
-    print(response.statusCode);
-    print(response.body);
-    print(recentRewards);
-
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      int rewards = jsonData['rewards'];
-
-      print('reward diperoleh dari refferal $rewards');
-
-      if (rewards > recentRewards) {
-        int currentCoin = prefs.getInt('coin');
-        if (currentCoin==null) {
-          currentCoin = 0;
-        }
-        currentCoin += 2;
-        prefs.setInt('coin', currentCoin);
-
-        DbHelper dbHelper = DbHelper();
-        DateTime now = DateTime.now();
-        String formattedDate = DateFormat('EEE d MMM').format(now);
-
-        int totalRewards = 2;
-
-        HistoryModel historyModel =
-            HistoryModel(formattedDate, 'Refferal', '+$totalRewards');
-        await dbHelper.insert(historyModel);
-
-        print('Data rewards refferal inserted');
-
-        prefs.setInt('rewards_from_refferal', rewards);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
