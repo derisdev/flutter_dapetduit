@@ -1,10 +1,5 @@
-import 'dart:convert';
-
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:dapetduit/ui/menuprofile.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:http/http.dart' as http;
-import 'package:dapetduit/ui/user/phoneverification.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:dapetduit/helper/dbhelper.dart';
 import 'package:intl/intl.dart';

@@ -1,9 +1,6 @@
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PhoneVerification extends StatefulWidget {
   @override
@@ -24,6 +21,8 @@ class _PhoneVerificationState extends State<PhoneVerification> {
     });
 
     await fetchData.phoneVerify(phoneController.text);
+
+    await Future.delayed(Duration(seconds: 2));
     
     setState(() {
      isLoading = false; 

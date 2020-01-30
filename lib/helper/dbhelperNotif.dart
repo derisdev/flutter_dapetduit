@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'package:dapetduit/model/paymentModel.dart';
+import 'package:dapetduit/model/notifModel.dart';
 import 'package:path/path.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBHelperPayment {
+class DBHelperNotif {
   static Database _database;
-  static final DBHelperPayment db = DBHelperPayment._();
+  static final DBHelperNotif db = DBHelperNotif._();
 
-  DBHelperPayment._();
+  DBHelperNotif._();
 
   Future<Database> get database async {
     // If database exists, return database
@@ -24,43 +24,42 @@ class DBHelperPayment {
   // Create the database and the Employee table
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, 'payment_manager.db');
+    final path = join(documentsDirectory.path, 'notif_manager.db');
 
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE Payment('
+      await db.execute('CREATE TABLE Notif('
           'id INTEGER PRIMARY KEY,'
-          'via TEXT,'
-          'amount TEXT,'
-          'status TEXT,'
-          'time TEXT'
+          'title TEXT,'
+          'time TEXT,'
+          'description TEXT'
           ')');
     });
   }
 
   // Insert employee on database
-  createPayment(Payment payment) async {
-    await deleteAllPayment();
+  createNotif(Notif notif) async {
+    await deleteAllNotif();
     final db = await database;
-    final res = await db.insert('Payment', payment.toJson());
+    final res = await db.insert('Notif', notif.toJson());
 
     return res;
   }
 
   // Delete all employees
-  Future<int> deleteAllPayment() async {
+  Future<int> deleteAllNotif() async {
     final db = await database;
-    final res = await db.rawDelete('DELETE FROM Payment');
+    final res = await db.rawDelete('DELETE FROM Notif');
 
     return res;
   }
 
-  Future<List<Payment>> getAllPayment() async {
+  Future<List<Notif>> getAllNotif() async {
     final db = await database;
-    final res = await db.rawQuery("SELECT * FROM Payment");
+    final res = await db.rawQuery("SELECT * FROM Notif");
 
-    List<Payment> list =
-        res.isNotEmpty ? res.map((c) => Payment.fromJson(c)).toList() : null;
+    List<Notif> list =
+        res.isNotEmpty ? res.map((c) => Notif.fromJson(c)).toList() : null;
 
     return list;
   }

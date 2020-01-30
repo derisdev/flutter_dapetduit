@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'package:dapetduit/model/paymentModel.dart';
+import 'package:dapetduit/model/feedbackModel.dart';
 import 'package:path/path.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBHelperPayment {
+class DBHelperFeedback {
   static Database _database;
-  static final DBHelperPayment db = DBHelperPayment._();
+  static final DBHelperFeedback db = DBHelperFeedback._();
 
-  DBHelperPayment._();
+  DBHelperFeedback._();
 
   Future<Database> get database async {
     // If database exists, return database
@@ -24,43 +24,41 @@ class DBHelperPayment {
   // Create the database and the Employee table
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, 'payment_manager.db');
+    final path = join(documentsDirectory.path, 'feedback_manager.db');
 
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE Payment('
+      await db.execute('CREATE TABLE Feedback('
           'id INTEGER PRIMARY KEY,'
-          'via TEXT,'
-          'amount TEXT,'
-          'status TEXT,'
-          'time TEXT'
+          'question TEXT,'
+          'answer TEXT'
           ')');
     });
   }
 
   // Insert employee on database
-  createPayment(Payment payment) async {
-    await deleteAllPayment();
+  createFeedback(FeedbackModel feedback) async {
+    await deleteAllFeedback();
     final db = await database;
-    final res = await db.insert('Payment', payment.toJson());
+    final res = await db.insert('Feedback', feedback.toJson());
 
     return res;
   }
 
   // Delete all employees
-  Future<int> deleteAllPayment() async {
+  Future<int> deleteAllFeedback() async {
     final db = await database;
-    final res = await db.rawDelete('DELETE FROM Payment');
+    final res = await db.rawDelete('DELETE FROM Feedback');
 
     return res;
   }
 
-  Future<List<Payment>> getAllPayment() async {
+  Future<List<FeedbackModel>> getAllFeedback() async {
     final db = await database;
-    final res = await db.rawQuery("SELECT * FROM Payment");
+    final res = await db.rawQuery("SELECT * FROM Feedback");
 
-    List<Payment> list =
-        res.isNotEmpty ? res.map((c) => Payment.fromJson(c)).toList() : null;
+    List<FeedbackModel> list =
+        res.isNotEmpty ? res.map((c) => FeedbackModel.fromJson(c)).toList() : null;
 
     return list;
   }

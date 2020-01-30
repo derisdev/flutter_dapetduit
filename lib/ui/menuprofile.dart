@@ -1,3 +1,5 @@
+import 'package:dapetduit/ui/menuprofile/feedbackmenu.dart';
+import 'package:dapetduit/ui/menuprofile/notifmenu.dart';
 import 'package:flutter/material.dart';
 
 class MenuProfile extends StatefulWidget {
@@ -83,12 +85,22 @@ class _MenuProfileState extends State<MenuProfile> {
                                   leading: Icon(Icons.repeat),
                                   title: Text('Q & A'),
                                   trailing: Icon(Icons.chevron_right),
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => FeedbackMenu()
+                                    ));
+                                  },
                                 ),
                                 Divider(),
                                 ListTile(
                                   leading: Icon(Icons.notifications),
                                   title: Text('Notifikasi'),
                                   trailing: Icon(Icons.chevron_right),
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => NotifMenu()
+                                    ));
+                                  },
                                 ),
                                 Divider(),
                                 ListTile(

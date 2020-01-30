@@ -1,16 +1,16 @@
-import 'package:flutter/cupertino.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:dapetduit/helper/dbhelperPayment.dart';
+import 'package:dapetduit/helper/dbhelperFeedback.dart';
 import 'package:dapetduit/service/fetchdata.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HistoryPayouts extends StatefulWidget {
+class FeedbackMenu extends StatefulWidget {
   @override
-  _HistoryPayoutsState createState() => _HistoryPayoutsState();
+  _FeedbackMenuState createState() => _FeedbackMenuState();
 }
 
-class _HistoryPayoutsState extends State<HistoryPayouts> {
+class _FeedbackMenuState extends State<FeedbackMenu> {
 
   bool isLoading = false;
 
@@ -22,7 +22,7 @@ class _HistoryPayoutsState extends State<HistoryPayouts> {
     });
    
     FetchData fetchData = FetchData();
-    await fetchData.readPayment();
+    await fetchData.readFeedback();
 
     await Future.delayed(const Duration(seconds: 2));
 
@@ -44,13 +44,42 @@ class _HistoryPayoutsState extends State<HistoryPayouts> {
     _refreshController.loadComplete();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return isLoading? SpinKitThreeBounce(
+    return Stack(
+      children: <Widget>[
+        Image.asset(
+        "images/background.jpeg",
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
+      ),
+      Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left, size: 40,),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: Container(
+            height: MediaQuery.of(context).size.height*7/8+1,
+                padding: EdgeInsets.only(top: 30),
+                decoration: new BoxDecoration(
+                    color: Color(0xffefeff4),
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(40.0),
+                        topRight: const Radius.circular(40.0))),
+                child: isLoading? SpinKitThreeBounce(
       size: 40.0,
       color: Color(0xff24bd64),
     ) : FutureBuilder(
-      future: DBHelperPayment.db.getAllPayment(),
+      future: DBHelperFeedback.db.getAllFeedback(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return SmartRefresher(
@@ -81,7 +110,7 @@ class _HistoryPayoutsState extends State<HistoryPayouts> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
             child: Center(
-              child: Text('Belum ada history.\nTarik kebawah untuk memperbarui', textAlign: TextAlign.center,),
+              child: Text('Belum ada Feedback.\nTarik kebawah untuk memperbarui', textAlign: TextAlign.center,),
             ),
           );
         } else {
@@ -115,32 +144,34 @@ class _HistoryPayoutsState extends State<HistoryPayouts> {
             child: ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                String icon;
-                if (snapshot.data[index].via == 'DANA') {
-                  icon = 'dana';
-                } else if (snapshot.data[index].via == 'OVO') {
-                  icon = 'ovo';
-                } else {
-                  icon = 'gopay';
-                }
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Card(
-                    elevation: 3,
-                    child: ListTile(
-                      leading: ClipRRect(
-                          borderRadius: new BorderRadius.circular(8.0),
-                          child: Image.asset('images/icon/$icon.jpeg')),
-                      title: Text(snapshot.data[index].amount),
-                      subtitle: Text(
-                        snapshot.data[index].time,
-                      ),
-                      trailing: Text(
-                        snapshot.data[index].status,
-                        style: TextStyle(color: Colors.amber),
-                      ),
-                      onTap: () {},
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)
                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text('Q: ', style: TextStyle(fontWeight: FontWeight.bold),),
+                              SizedBox(width: 10,),
+                              Flexible(child: Text('Kenapa fitur checkin menghilang?')),
+                            ],
+                          ),
+                          SizedBox(height: 10,),
+                          Row(
+                            children: <Widget>[
+                              Text('A: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                              SizedBox(width: 10,),
+                              Flexible(child: Text('Hello, kalo kamu punya akun lain sedang checkin balaa al bla')),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                   ),
                 );
               },
@@ -148,6 +179,9 @@ class _HistoryPayoutsState extends State<HistoryPayouts> {
           );
         }
       },
+    )
+                ))
+      ],
     );
   }
 }

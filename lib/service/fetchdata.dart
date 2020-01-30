@@ -1,7 +1,13 @@
 import 'dart:convert';
 import 'package:dapetduit/helper/dbhelper.dart';
+import 'package:dapetduit/helper/dbhelperFeedback.dart';
+import 'package:dapetduit/helper/dbhelperNotif.dart';
+import 'package:dapetduit/helper/dbhelperOfferwall.dart';
 import 'package:dapetduit/helper/dbhelperPayment.dart';
+import 'package:dapetduit/model/OfferwallModel.dart';
+import 'package:dapetduit/model/feedbackModel.dart';
 import 'package:dapetduit/model/historyModel.dart';
+import 'package:dapetduit/model/notifModel.dart';
 import 'package:dapetduit/model/paymentModel.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,8 +19,6 @@ class FetchData {
 
   
   Future readOfferwall() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/offerwall";
     var response = await http.get(baseUrl,
@@ -22,6 +26,10 @@ class FetchData {
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
+      return (jsonData['offerwall'] as List).map((offerwall) {
+      print('Inserting $offerwall');
+      DBHelperOfferwall.db.createOfferwall(OfferwallModel.fromJson(offerwall));
+    }).toList();
     }
     print(response.statusCode);
     print(response.body);
@@ -208,7 +216,7 @@ class FetchData {
     String phone = prefs.getString('phone');
 
     String baseUrl =
-        "https://duitrest.000webhostapp.com/api/v1/user/payment/085719632945";
+        "https://duitrest.000webhostapp.com/api/v1/user/payment/$phone";
     var response = await http.get(baseUrl,
         headers: {"Accept": "application/json"},);
     if (response.statusCode == 200) {
@@ -224,7 +232,6 @@ class FetchData {
 
 
   Future readNotif() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/notif";
@@ -232,13 +239,16 @@ class FetchData {
         headers: {"Accept": "application/json"},);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
+      return (jsonData['notif'] as List).map((notif) {
+      print('Inserting $notif');
+      DBHelperNotif.db.createNotif(Notif.fromJson(notif));
+    }).toList();
     }
     print(response.statusCode);
     print(response.body);
   }
 
   Future readFeedback() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/feedback";
@@ -246,6 +256,10 @@ class FetchData {
         headers: {"Accept": "application/json"},);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
+      return (jsonData['feedback'] as List).map((feedback) {
+      print('Inserting $feedback');
+      DBHelperFeedback.db.createFeedback(FeedbackModel.fromJson(feedback));
+    }).toList();
     }
     print(response.statusCode);
     print(response.body);
