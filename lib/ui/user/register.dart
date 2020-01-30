@@ -104,39 +104,32 @@ class _RegisterState extends State<Register> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } else if (response.statusCode == 500) {
-      Fluttertoast.showToast(
-          msg:
-              'Username sudah ada yang menggunakan atau kode refferal tidak valid',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          fontSize: 14.0,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
+     showToast('Username sudah ada yang menggunakan');
     } else if (response.statusCode == 504) {
-      Fluttertoast.showToast(
-          msg: 'Server sedang ada gangguan. Coba lagi nanti',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          fontSize: 14.0,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Gagal terhubung ke server',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          fontSize: 14.0,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
+      showToast('Server sedang ada gangguan. Coba lagi nanti');
+          
+    } else if(response.statusCode == 404) {
+      showToast('kode Refferal tidak valid');
+    }
+     else {
+      showToast('Gagal terhubung ke server');
     }
     setState(() {
         print(response.statusCode);
         print(response.body);
         _isLoading = false;
       });
+  }
+
+  void showToast(String msg) {
+    Fluttertoast.showToast(
+          msg: msg,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 14.0,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
   }
 
 

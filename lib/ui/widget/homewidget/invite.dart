@@ -12,25 +12,25 @@ class Invite extends StatefulWidget {
 }
 
 class _InviteState extends State<Invite> {
-  int currentCoin;
+  int currentInvited;
   bool isLink = true;
 
   @override
   void initState() {
     super.initState();
-    getCurrentCoin();
+    getCurrentInvite();
   }
 
-  Future getCurrentCoin() async {
+  Future getCurrentInvite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int coin = prefs.getInt('coin');
-    if (coin == null) {
+    String invited = prefs.getString('invited');
+    if (invited == null) {
       setState(() {
-        currentCoin = 0;
+        currentInvited = 0;
       });
     } else {
       setState(() {
-        currentCoin = coin;
+        currentInvited = int.parse(invited);
       });
     }
   }
@@ -61,7 +61,10 @@ class _InviteState extends State<Invite> {
                   children: <Widget>[
                     Text('Total Teman yang telah di undang',
                         style: TextStyle(color: Colors.white, fontSize: 15)),
-                    Text('0',
+                    Text(currentInvited == null? SpinKitThreeBounce(
+                      size: 30,
+                      color: Colors.white,
+                    ) : currentInvited.toString(),
                         style: TextStyle(color: Colors.white, fontSize: 30)),
                   ],
                 )),

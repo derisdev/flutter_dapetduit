@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dapetduit/helper/dbhelper.dart';
 import 'package:dapetduit/model/historyModel.dart';
+import 'package:dapetduit/service/fetchdata.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
@@ -21,6 +22,8 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   bool login = false;
 
+  FetchData fetchData = new FetchData();
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +34,7 @@ class _SplashState extends State<Splash> {
         Duration(seconds: 2),
         () => checkInternet().then((internet) {
               if (internet != null && internet) {
-
+                initAllDataFromDB();
                 Timer(
                     Duration(seconds: 3),
                     () => Navigator.pushReplacement(context,
@@ -112,6 +115,7 @@ class _SplashState extends State<Splash> {
                           checkInternet().then((internet) {
                             if (internet != null && internet) {
                               Navigator.pop(context);
+                              initAllDataFromDB();
                               Timer(
                                   Duration(seconds: 3),
                                   () => Navigator.pushReplacement(context,
@@ -134,6 +138,10 @@ class _SplashState extends State<Splash> {
             ));
   }
 
+  Future initAllDataFromDB() async {
+    fetchData.readRefferal();
+    fetchData.readRewards();
+  }
 
   @override
   Widget build(BuildContext context) {

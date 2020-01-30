@@ -1,4 +1,6 @@
 import 'package:dapetduit/ui/history.dart';
+import 'package:dapetduit/ui/homepage.dart';
+import 'package:dapetduit/ui/widget/homewidget/invite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -226,7 +228,11 @@ class _MoreTaskState extends State<MoreTask> {
                           Icons.monetization_on,
                           color: Colors.white,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => Invite()
+                          ));
+                        },
                       ),
                     ),
                   ],

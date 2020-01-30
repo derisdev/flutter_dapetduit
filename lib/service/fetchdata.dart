@@ -1,4 +1,10 @@
 import 'dart:convert';
+import 'package:dapetduit/helper/dbhelper.dart';
+import 'package:dapetduit/helper/dbhelperPayment.dart';
+import 'package:dapetduit/model/historyModel.dart';
+import 'package:dapetduit/model/paymentModel.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -81,19 +87,53 @@ class FetchData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     String rewardsId = prefs.getString('rewards_id');
+    String refferalCodeRefferal = prefs.getString('refferal_code_refferer');
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId?token=$token";
     var response = await http.post(baseUrl,
         headers: {"Accept": "application/json"},
-        body: {'rewards': rewards, '_method': 'PATCH'});
+        body: {'rewards': rewards, 'refferal': refferalCodeRefferal,'_method': 'PATCH'});
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      int newRewards = jsonData['rewards'];
+      print('rewards updated');
     }
     print(response.statusCode);
     print(response.body);
   }
+
+  
+
+  Future readRewards() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String rewardsId = prefs.getString('rewards_id');
+    int currentCoin = prefs.getInt('coin');
+
+    String baseUrl =
+        "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId";
+    var response = await http.get(baseUrl,
+        headers: {"Accept": "application/json"});
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      int newRewards = jsonData['rewards']['rewards'];
+      if(newRewards > currentCoin) {
+      prefs.setInt('coin', newRewards);
+      DbHelper dbHelper = DbHelper();
+
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('EEE d MMM').format(now);
+
+  HistoryModel historyModel =
+      HistoryModel(formattedDate, 'Refferal', '+$newRewards-$currentCoin');
+  await dbHelper.insert(historyModel);
+
+  print('object created');
+      }
+    }
+    print(response.statusCode);
+    print(response.body);
+  }
+
+  
 
   Future phoneVerify(String phone) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -105,7 +145,28 @@ class FetchData {
         headers: {"Accept": "application/json"},
         body: {'user_id': userId.toString(), 'phone': phone});
     if (response.statusCode == 201) {
+       Fluttertoast.showToast(
+          msg:
+          'Nomor di tambahkan',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 14.0,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
+
         prefs.setString('phone', phone);
+    }
+    else {
+      Fluttertoast.showToast(
+          msg:
+          'Terjadi Kesalahan saat menambahan Nomor Telpon',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 14.0,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
     }
     print(response.statusCode);
     print(response.body);
@@ -147,11 +208,15 @@ class FetchData {
     String phone = prefs.getString('phone');
 
     String baseUrl =
-        "https://duitrest.000webhostapp.com/api/v1/user/payment/$phone";
+        "https://duitrest.000webhostapp.com/api/v1/user/payment/085719632945";
     var response = await http.get(baseUrl,
         headers: {"Accept": "application/json"},);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
+      return (jsonData['payment'] as List).map((payment) {
+      print('Inserting $payment');
+      DBHelperPayment.db.createPayment(Payment.fromJson(payment));
+    }).toList();
     }
     print(response.statusCode);
     print(response.body);

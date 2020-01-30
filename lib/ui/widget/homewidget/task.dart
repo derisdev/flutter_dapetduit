@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dapetduit/service/fetchdata.dart';
 import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +24,6 @@ class Task extends StatefulWidget {
 class _TaskState extends State<Task>
     with IronSourceListener, WidgetsBindingObserver {
   int currentCoin;
-  int currentOfferwallDone;
 
   List<HistoryModel> listHistory = [];
 
@@ -57,66 +57,7 @@ class _TaskState extends State<Task>
     savetoPrefs(currentCoin);
   }
 
-  Future getCurrentOfferwallDone() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int currentDone = prefs.getInt('offerwallDone');
-    if (currentDone == null) {
-      setState(() {
-        currentOfferwallDone = 0;
-      });
-    } else {
-      setState(() {
-        currentOfferwallDone = currentDone;
-      });
-    }
-    print('currentOfferwallDone $currentOfferwallDone');
 
-    if (currentOfferwallDone == 2) {
-      giftRewards();
-    }
-  }
-
-  Future giftRewards() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String refferalCodeRefferer = prefs.getString('refferal_code_refferer');
-    String refferalCodeOwner = prefs.getString('refferal_code_owner');
-
-    String baseUrl =
-        "https://dapetduitrestapi.000webhostapp.com/api/v1/user/gift_refferal";
-    var response = await http.post(baseUrl, headers: {
-      "Accept": "application/json"
-    }, body: {
-      'refferal_code_refferer': refferalCodeRefferer,
-      'refferal_code_owner': refferalCodeOwner
-    });
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      setState(() {
-        currentCoin += 2;
-      });
-
-      savetoPrefs(currentCoin);
-      final jsonData = json.decode(response.body);
-      int rewards = jsonData['refferal_code_owner'];
-
-      DbHelper dbHelper = DbHelper();
-      DateTime now = DateTime.now();
-      String formattedDate = DateFormat('EEE d MMM').format(now);
-
-      int totalRewards = 2;
-
-      HistoryModel historyModel =
-          HistoryModel(formattedDate, 'Refferal', '+$totalRewards');
-      await dbHelper.insert(historyModel);
-
-      print('Data rewards refferal inserted');
-
-      prefs.setInt('rewards_from_refferal', rewards);
-    }
-    print(response.body);
-    prefs.setInt('offerwallDone', 5);
-  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -502,17 +443,9 @@ class _TaskState extends State<Task>
     });
 
     savetoPrefs(currentCoin);
-
     saveHistory(reward.credits, 'Offerwall Rewards');
-
-    //memberikan rewards rfferal ketika user menyelesaikan 2 offerwall
-
-    setState(() {
-      currentOfferwallDone += 1;
-    });
-
-    cekDone(currentOfferwallDone);
-    getCurrentOfferwallDone();
+    rewardConfirm(context, reward.credits);
+    savetoDB(reward.credits);
   }
 
   @override
@@ -548,14 +481,6 @@ class _TaskState extends State<Task>
   void onRewardedVideoAdClosed() {
     print("onRewardedVideoAdClosed");
 
-    int coin = 2;
-
-    setState(() {
-      currentCoin += coin;
-    });
-    savetoPrefs(currentCoin);
-    rewardConfirm(context, coin);
-    saveHistory(coin, 'Video Rewards');
   }
 
   @override
@@ -571,6 +496,16 @@ class _TaskState extends State<Task>
   @override
   void onRewardedVideoAdRewarded(Placement placement) {
     print("onRewardedVideoAdRewarded: ${placement.rewardAmount}");
+    
+    int coin = 2;
+
+    setState(() {
+      currentCoin += coin;
+    });
+    savetoPrefs(currentCoin);
+    rewardConfirm(context, coin);
+    saveHistory(coin, 'Video Rewards');
+    savetoDB(coin);
   }
 
   @override
@@ -617,7 +552,7 @@ Future savetoPrefs(int currentCoin) async {
   print('saved $currentCoin');
 }
 
-saveHistory(int coin, String from) async {
+Future saveHistory(int coin, String from) async {
   DbHelper dbHelper = DbHelper();
 
   DateTime now = DateTime.now();
@@ -630,10 +565,13 @@ saveHistory(int coin, String from) async {
   print('object created');
 }
 
-Future cekDone(int currentOfferwallDone) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('offerwallDone', currentOfferwallDone);
+Future savetoDB(int rewards) async{
+  FetchData fetchData = new FetchData();
+  fetchData.updateRewards(rewards.toString());
 }
+
+
+
 
 class BannerAdListener extends IronSourceBannerListener {
   @override

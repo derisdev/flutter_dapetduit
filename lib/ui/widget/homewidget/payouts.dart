@@ -67,11 +67,7 @@ class _PayoutsState extends State<Payouts> {
                   ],
                 )),
               ),
-              Container(
-                  margin: EdgeInsets.only(top: 60),
-                  height: MediaQuery.of(context).size.height * 2 / 3,
-                  padding: EdgeInsets.only(bottom: 125),
-                  child: isWithdraw ? WithdrawPayouts() : HistoryPayouts()),
+              isWithdraw ? WithdrawPayouts() : HistoryPayouts(),
             ],
           ),
           Positioned(
