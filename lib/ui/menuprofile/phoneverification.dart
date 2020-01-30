@@ -1,4 +1,5 @@
 import 'package:dapetduit/service/fetchdata.dart';
+import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,10 @@ class _PhoneVerificationState extends State<PhoneVerification> {
     setState(() {
      isLoading = false; 
     });
+    Navigator.pop(context);
+    Navigator.pushReplacement(context, MaterialPageRoute(
+      builder: (context) => MenuProfile()
+    ));
   }
 
   @override

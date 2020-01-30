@@ -1,9 +1,4 @@
-import 'dart:convert';
-
-import 'package:dapetduit/helper/dbhelper.dart';
-import 'package:dapetduit/model/historyModel.dart';
 import 'package:dapetduit/service/fetchdata.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
@@ -11,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dapetduit/ui/homepage.dart';
 import 'package:dapetduit/ui/user/register.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {
@@ -139,8 +133,13 @@ class _SplashState extends State<Splash> {
   }
 
   Future initAllDataFromDB() async {
-    fetchData.readRefferal();
-    fetchData.readRewards();
+    await fetchData.readRefferal();
+    await fetchData.readRewards();
+    await fetchData.readPayment();
+    
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isFeedbackLoaded', false);
+    prefs.setBool('isNotifLoaded', false);
   }
 
   @override

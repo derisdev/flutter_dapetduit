@@ -100,7 +100,7 @@ class _TaskState extends State<Task>
     } else {
       Fluttertoast.showToast(
           msg:
-              "Offerwall belum tersedia untuk saat ini. Tunggu beberapa saat lagi",
+              "Tunggu sebentar. Offerwall sedang di persiapkan",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIos: 1,

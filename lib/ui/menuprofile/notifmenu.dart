@@ -1,10 +1,10 @@
-import 'package:dapetduit/helper/dbhelperFeedback.dart';
 import 'package:dapetduit/helper/dbhelperNotif.dart';
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotifMenu extends StatefulWidget {
   @override
@@ -13,6 +13,23 @@ class NotifMenu extends StatefulWidget {
 
 class _NotifMenuState extends State<NotifMenu> {
   bool isLoading = false;
+
+   @override
+  void initState() { 
+    super.initState();
+    checkLoaded();
+  }
+
+  Future checkLoaded() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoaded = prefs.getBool('isNotifLoaded');
+
+    if (!isLoaded) {
+      _loadFromApi();
+    }
+    prefs.setBool('isNotifLoaded', true);
+
+  }
 
   _loadFromApi() async {
     setState(() {

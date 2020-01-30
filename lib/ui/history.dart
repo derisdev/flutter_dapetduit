@@ -29,7 +29,7 @@ class _HistoryState extends State<History> {
     void updateListView() {
     final Future<Database> dbFuture = dbHelper.initDb();
     dbFuture.then((database) {
-      Future<List<HistoryModel>> contactListFuture = dbHelper.getContactList();
+      Future<List<HistoryModel>> contactListFuture = dbHelper.getHistoryList();
       contactListFuture.then((contactList) {
         setState(() {
           this.historyList = contactList;

@@ -1,6 +1,9 @@
 import 'package:dapetduit/ui/menuprofile/feedbackmenu.dart';
 import 'package:dapetduit/ui/menuprofile/notifmenu.dart';
+import 'package:dapetduit/ui/menuprofile/phoneverification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuProfile extends StatefulWidget {
   @override
@@ -8,6 +11,41 @@ class MenuProfile extends StatefulWidget {
 }
 
 class _MenuProfileState extends State<MenuProfile> {
+
+  String name;
+  String phone;
+
+  bool isVerified = false;
+
+  @override
+  void initState() {
+    super.initState();
+    readDatauser();
+  }
+
+  Future readDatauser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String name = prefs.getString('name');
+    String phone = prefs.getString('phone');
+
+    if(phone == null) {
+      setState(() {
+       isVerified = false; 
+      });
+    }
+    else {
+      setState(() {
+       isVerified = true; 
+      });
+    }
+
+    setState(() {
+     this.name = name;
+     this.phone = phone; 
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -58,9 +96,17 @@ class _MenuProfileState extends State<MenuProfile> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                  Text('User', style: TextStyle(fontSize: 20),),
-                                  SizedBox(height: 5,),
-                                  Text('+6285719632945', style: TextStyle(fontSize: 15, color: Colors.grey))
+                                  name==null? SpinKitThreeBounce(size: 20, color: Colors.amber,) :Text(name, style: TextStyle(fontSize: 20),),
+                                  isVerified? phone==null? SpinKitThreeBounce(size: 20, color: Colors.amber)  : Text(phone, style: TextStyle(fontSize: 15, color: Colors.grey)) 
+                                  : FlatButton(
+                                    child: Text('Verifikasi nomor telpon', style: TextStyle(color: Colors.red),
+                                    ),
+                                    onPressed: (){
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) => PhoneVerification()
+                                      ));
+                                    },
+                                    ),
                               ],
                             ),
                                 ),

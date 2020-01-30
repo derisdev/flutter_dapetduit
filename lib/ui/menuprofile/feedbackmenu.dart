@@ -1,9 +1,11 @@
 import 'package:dapetduit/helper/dbhelperFeedback.dart';
 import 'package:dapetduit/service/fetchdata.dart';
+import 'package:dapetduit/ui/menuprofile/questionmenucreate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FeedbackMenu extends StatefulWidget {
   @override
@@ -13,6 +15,22 @@ class FeedbackMenu extends StatefulWidget {
 class _FeedbackMenuState extends State<FeedbackMenu> {
 
   bool isLoading = false;
+
+  @override
+  void initState() { 
+    super.initState();
+    checkLoaded();
+  }
+
+  Future checkLoaded() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoaded = prefs.getBool('isFeedbackLoaded');
+
+    if (!isLoaded) {
+      _loadFromApi();
+    }
+    prefs.setBool('isFeedbackLoaded', true);
+  }
 
 
   _loadFromApi() async {
@@ -66,6 +84,19 @@ class _FeedbackMenuState extends State<FeedbackMenu> {
                 Navigator.pop(context);
               },
             ),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: Icon(Icons.add, size: 30),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => QuestionMenuCreate()
+                    ));
+                  },
+                ),
+              )
+            ],
           ),
           body: Container(
             height: MediaQuery.of(context).size.height*7/8+1,

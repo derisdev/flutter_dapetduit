@@ -1,3 +1,5 @@
+import 'package:dapetduit/service/fetchdata.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,31 +11,13 @@ class WithdrawPayouts extends StatefulWidget {
 
 class _WithdrawPayoutsState extends State<WithdrawPayouts> {
   bool isLoading = false;
+  FetchData fetchData = new FetchData();
 
   Future withdraw(String via, String amount) async {
     setState(() {
       isLoading = true;
     });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    int userId = prefs.getInt('user_id');
-    String phone = prefs.getString('phone');
-
-    String baseUrl =
-        "https://dapetduitrestapi.000webhostapp.com/api/v1/payment?token=$token";
-    var response = await http.post(baseUrl, headers: {
-      "Accept": "application/json"
-    }, body: {
-      'phone': '+62$phone',
-      'via': via,
-      'amount': amount,
-      'userId': userId.toString(),
-      'status': 'Pending',
-    });
-    if (response.statusCode == 201) {}
-    print(response.statusCode);
-    print(response.body);
+    await fetchData.createPayment(via, amount);
     setState(() {
       isLoading = false;
     });
@@ -44,7 +28,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
     return SingleChildScrollView(
         child: Column(
       children: <Widget>[
-        Padding(
+        isLoading? SpinKitThreeBounce(size: 30, color: Colors.amber) : Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Card(
             elevation: 3,
@@ -60,7 +44,9 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 '1700 koin',
                 style: TextStyle(color: Colors.amber),
               ),
-              onTap: () {},
+              onTap: () {
+                withdraw('DANA', "IDR 10.000");
+              },
             ),
           ),
         ),

@@ -1,7 +1,5 @@
 import 'package:dapetduit/ui/widget/invitewidget/kodeundanganwidget.dart';
 import 'package:dapetduit/ui/widget/invitewidget/linkwidget.dart';
-import 'package:dapetduit/ui/widget/payoutswidget/historypayouts.dart';
-import 'package:dapetduit/ui/widget/payoutswidget/withdrawpayouts.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,10 +59,10 @@ class _InviteState extends State<Invite> {
                   children: <Widget>[
                     Text('Total Teman yang telah di undang',
                         style: TextStyle(color: Colors.white, fontSize: 15)),
-                    Text(currentInvited == null? SpinKitThreeBounce(
+                    currentInvited == null? SpinKitThreeBounce(
                       size: 30,
                       color: Colors.white,
-                    ) : currentInvited.toString(),
+                    ) : Text(currentInvited.toString(),
                         style: TextStyle(color: Colors.white, fontSize: 30)),
                   ],
                 )),

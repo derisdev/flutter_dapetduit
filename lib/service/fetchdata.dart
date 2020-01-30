@@ -182,7 +182,7 @@ class FetchData {
 
 
   
-  Future createPayment(String via, String amount, String time) async {
+  Future createPayment(String via, String amount) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     int userId = prefs.getInt('user_id');

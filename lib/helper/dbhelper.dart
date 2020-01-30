@@ -70,7 +70,7 @@ class DbHelper {
     return count;
   }
   
-  Future<List<HistoryModel>> getContactList() async {
+  Future<List<HistoryModel>> getHistoryList() async {
     var historyMapList = await select();
     int count = historyMapList.length;
     List<HistoryModel> historyList = List<HistoryModel>();

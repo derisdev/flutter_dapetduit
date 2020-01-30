@@ -1,4 +1,4 @@
-import 'package:dapetduit/ui/homepage.dart';
+import 'package:dapetduit/ui/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: HomePage()
+      home: Splash()
     );
   }
 }

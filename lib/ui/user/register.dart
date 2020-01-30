@@ -98,8 +98,8 @@ class _RegisterState extends State<Register> {
         prefs.setString('link_refferal', link.toString());
       });
 
-      fetchData.createRefferal(refferalOwner, userId, token);
-      fetchData.createRewards(userId, token);
+      await fetchData.createRefferal(refferalOwner, userId, token);
+      await fetchData.createRewards(userId, token);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
