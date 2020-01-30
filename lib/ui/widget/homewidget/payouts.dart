@@ -67,7 +67,12 @@ class _PayoutsState extends State<Payouts> {
                   ],
                 )),
               ),
-              isWithdraw ? WithdrawPayouts() : HistoryPayouts(),
+              Container(
+                margin: EdgeInsets.only(top: 60),
+                height: MediaQuery.of(context).size.height * 2 / 3,
+                padding: EdgeInsets.only(bottom: 125),
+                child: isWithdraw ? WithdrawPayouts() : HistoryPayouts(),
+              )
             ],
           ),
           Positioned(
@@ -119,7 +124,9 @@ class _PayoutsState extends State<Payouts> {
                       child: Center(
                         child: Text('History',
                             style: TextStyle(
-                                color: isWithdraw ? Colors.black : Colors.greenAccent,
+                                color: isWithdraw
+                                    ? Colors.black
+                                    : Colors.greenAccent,
                                 fontSize: 20)),
                       ),
                     ),
@@ -133,7 +140,11 @@ class _PayoutsState extends State<Payouts> {
             child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
                 margin: EdgeInsets.only(top: 40.0),
-                child: Image.asset('images/icon/menu.png', width: 30, height: 30,)),
+                child: Image.asset(
+                  'images/icon/menu.png',
+                  width: 30,
+                  height: 30,
+                )),
           ),
         ],
       ),
