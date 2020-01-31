@@ -35,6 +35,7 @@ class _TaskState extends State<Task>
     getCurrentCoin();
     WidgetsBinding.instance.addObserver(this);
     init();
+    giftRewardIfHaveRefferal();
   }
 
   Future getCurrentCoin() async {
@@ -50,6 +51,25 @@ class _TaskState extends State<Task>
       });
     }
     savetoPrefs(currentCoin);
+  }
+
+  Future giftRewardIfHaveRefferal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isHaveRefferal = prefs.getBool('haveRefferal');
+
+    if(isHaveRefferal) {
+      setState(() {
+      currentCoin += 150;
+    });
+
+    savetoPrefs(currentCoin);
+    saveHistory(150, 'Refferal');
+    rewardConfirm(context, 150);
+    savetoDBFirst(150);
+    }
+
+    prefs.setBool('haveRefferal', false);
+    
   }
 
 
@@ -201,50 +221,55 @@ class _TaskState extends State<Task>
                         Container(
                           height: 200,
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 12),
+                          child: GestureDetector(
+                            onTap: (){
+                              showOfferwall();
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 12),
+                                        child: Image.asset(
+                                          'images/icon/is.png',
+                                          height: 35,
+                                          width: 35,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: Text('Iron Source Offerwall',
+                                            style: TextStyle(fontSize: 20)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 125,
+                                    width: 305,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
                                       child: Image.asset(
-                                        'images/icon/is.png',
-                                        height: 35,
-                                        width: 35,
+                                        'images/icon/isbanner.jpg',
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Text('Iron Source Offerwall',
-                                          style: TextStyle(fontSize: 20)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 125,
-                                  width: 305,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.asset(
-                                      'images/icon/isbanner.jpg',
-                                      fit: BoxFit.fill,
-                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                )
-                              ],
+                                  SizedBox(
+                                    height: 10,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -560,6 +585,10 @@ Future saveHistory(int coin, String from) async {
   print('object created');
 }
 
+Future savetoDBFirst(int rewards) async{
+  FetchData fetchData = new FetchData();
+  fetchData.updateRewardsFirst(rewards.toString());
+}
 Future savetoDB(int rewards) async{
   FetchData fetchData = new FetchData();
   fetchData.updateRewards(rewards.toString());

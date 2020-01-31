@@ -67,7 +67,8 @@ class FetchData {
       final jsonData = json.decode(response.body);
       String invited = jsonData['refferal']['invited'];
 
-      prefs.setString('invited', invited);
+      return invited;
+
     }
     print(response.statusCode);
     print(response.body);
@@ -91,17 +92,33 @@ class FetchData {
     print(response.body);
   }
 
-  Future updateRewards(String rewards) async {
+  Future updateRewardsFirst(String rewards) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     String rewardsId = prefs.getString('rewards_id');
-    String refferalCodeRefferal = prefs.getString('refferal_code_refferer');
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId?token=$token";
     var response = await http.post(baseUrl,
         headers: {"Accept": "application/json"},
-        body: {'rewards': rewards, 'refferal': refferalCodeRefferal,'_method': 'PATCH'});
+        body: {'rewards': rewards, 'refferal': 'norefferal','_method': 'PATCH'});
+    if (response.statusCode == 200) {
+      print('rewards updated');
+    }
+    print(response.statusCode);
+    print(response.body);
+  }
+  Future updateRewards(String rewards) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    String rewardsId = prefs.getString('rewards_id');
+    String refferalCodeRefferer = prefs.getString('refferal_code_refferer');
+
+    String baseUrl =
+        "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId?token=$token";
+    var response = await http.post(baseUrl,
+        headers: {"Accept": "application/json"},
+        body: {'rewards': rewards, 'refferal': refferalCodeRefferer,'_method': 'PATCH'});
     if (response.statusCode == 200) {
       print('rewards updated');
     }
@@ -122,9 +139,10 @@ class FetchData {
         headers: {"Accept": "application/json"});
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      int newRewards = jsonData['rewards']['rewards'];
-      if(newRewards > currentCoin) {
-      prefs.setInt('coin', newRewards);
+      String newRewards = jsonData['rewards']['rewards'];
+      int newReward = int.parse(newRewards);
+      if(newReward > currentCoin) {
+      prefs.setInt('coin', newReward);
       DbHelper dbHelper = DbHelper();
 
   DateTime now = DateTime.now();
@@ -187,12 +205,13 @@ class FetchData {
 
     int userId = prefs.getInt('user_id');
     String phone = prefs.getString('phone');
+    String token = prefs.getString('token');
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEE d MMM').format(now);
 
     String baseUrl =
-        "https://duitrest.000webhostapp.com/api/v1/payment?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHBzOi8vZHVpdHJlc3QuMDAwd2ViaG9zdGFwcC5jb20vYXBpL3YxL3VzZXIvcmVnaXN0ZXIiLCJpYXQiOjE1ODAzMDAzMTIsImV4cCI6MTU4MDMwMzkxMiwibmJmIjoxNTgwMzAwMzEyLCJqdGkiOiJ6eTNsZkN0UUNvZ0ZpYVV1In0.hMGLokgjePJAr_2f8pvFOVvA63-r6YIKjarD4cZm6fA";
+        "https://duitrest.000webhostapp.com/api/v1/payment?token=$token";
     var response = await http.post(baseUrl,
         headers: {"Accept": "application/json"},
         body: {

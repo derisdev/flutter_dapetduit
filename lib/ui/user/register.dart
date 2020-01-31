@@ -87,6 +87,10 @@ class _RegisterState extends State<Register> {
       prefs.setInt('user_id', userId);
       prefs.setString('refferal_code_refferer', refferalController.text);
 
+      if(refferalController.text != null) {
+        prefs.setBool('haveRefferal', true);
+      }
+
       
       //create dynamic Link
       String refferalOwner = randomAlphaNumeric(5);
