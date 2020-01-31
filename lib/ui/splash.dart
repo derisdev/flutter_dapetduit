@@ -135,10 +135,10 @@ class _SplashState extends State<Splash> {
   Future initAllDataFromDB() async {
     await fetchData.readRewards();
     await fetchData.readPayment();
+    await fetchData.readNotif();
     
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFeedbackLoaded', false);
-    await prefs.setBool('isNotifLoaded', false);
     await prefs.setBool('isInviteLoaded', false);
   }
 

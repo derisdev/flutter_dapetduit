@@ -14,23 +14,6 @@ class NotifMenu extends StatefulWidget {
 class _NotifMenuState extends State<NotifMenu> {
   bool isLoading = false;
 
-   @override
-  void initState() { 
-    super.initState();
-    checkLoaded();
-  }
-
-  Future checkLoaded() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoaded = prefs.getBool('isNotifLoaded');
-
-    if (!isLoaded) {
-      _loadFromApi();
-    }
-    prefs.setBool('isNotifLoaded', true);
-
-  }
-
   _loadFromApi() async {
     setState(() {
       isLoading = true;

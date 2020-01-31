@@ -148,8 +148,10 @@ class FetchData {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('EEE d MMM').format(now);
 
+  int newRewar = int.parse(newRewards)- currentCoin;
+
   HistoryModel historyModel =
-      HistoryModel(formattedDate, 'Refferal', '+$newRewards-$currentCoin');
+      HistoryModel(formattedDate, 'Refferal', '+$newRewar');
   await dbHelper.insert(historyModel);
 
   print('object created');
@@ -306,6 +308,34 @@ class FetchData {
     print(response.statusCode);
     print(response.body);
   }
+
+
+  
+  Future loginDB(String phone) async {
+
+    String baseUrl =
+        "https://duitrest.000webhostapp.com/api/v1/user/signin";
+    var response = await http.post(baseUrl,
+        headers: {"Accept": "application/json"},
+        body: {'phone': phone});
+    if (response.statusCode == 201) {
+        return true;
+    }
+    else {
+      Fluttertoast.showToast(
+          msg:
+          'Nomor Telpon di Perangkat ini tidak terdaftar',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 14.0,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
+    }
+    print(response.statusCode);
+    print(response.body);
+  }
+
  
 
 

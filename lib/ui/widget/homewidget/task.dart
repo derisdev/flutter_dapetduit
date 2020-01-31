@@ -1,5 +1,7 @@
+import 'package:dapetduit/helper/dbhelperNotif.dart';
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:dapetduit/ui/menuprofile.dart';
+import 'package:dapetduit/ui/menuprofile/notifmenu.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:dapetduit/helper/dbhelper.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +21,7 @@ class Task extends StatefulWidget {
 class _TaskState extends State<Task>
     with IronSourceListener, WidgetsBindingObserver {
   int currentCoin;
+  String titleNotif;
 
   List<HistoryModel> listHistory = [];
 
@@ -32,11 +35,26 @@ class _TaskState extends State<Task>
   void initState() {
     super.initState();
 
+    getLastNotifFromdb();
     getCurrentCoin();
     WidgetsBinding.instance.addObserver(this);
     init();
     giftRewardIfHaveRefferal();
   }
+
+  Future  getLastNotifFromdb() async {
+    DBHelperNotif.db.getLastNotif().then((title){
+
+       List<String> titleNotifs = title.split(' ');
+       
+       setState(() {
+        this.titleNotif = '${titleNotifs[0]} ${titleNotifs[1]} ${titleNotifs[2]}'; 
+       });
+
+      print(titleNotif);
+    });
+  }
+
 
   Future getCurrentCoin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -327,58 +345,9 @@ class _TaskState extends State<Task>
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 150,
                         ),
-                        Container(
-                          height: 200,
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 12),
-                                      child: Image.asset(
-                                        'images/icon/is.png',
-                                        height: 35,
-                                        width: 35,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Text('Iron Source Offerwall',
-                                          style: TextStyle(fontSize: 20)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 125,
-                                  width: 300,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.asset(
-                                      'images/icon/isbanner.jpg',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                    
                       ],
                     ),
                   ),
@@ -387,18 +356,41 @@ class _TaskState extends State<Task>
               Positioned(
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Container(
-                      margin: EdgeInsets.only(top: 50),
-                      width: MediaQuery.of(context).size.width - 50,
-                      height: 30.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.grey.withOpacity(0.2)),
-                      child: Center(
-                          child: Text('Misi Offerwall',
-                              style: TextStyle(
-                                fontSize: 15,
-                              )))),
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => NotifMenu()
+                      ));
+                    },
+                    child: Container(
+                        margin: EdgeInsets.only(top: 50),
+                        width: MediaQuery.of(context).size.width - 50,
+                        height: 30.0,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.grey.withOpacity(0.2)),
+                        child: Center(
+                            child: Center(
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(width: 10,),
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.red,
+                                      onPressed: (){},
+                                    ),
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Text(titleNotif==null? 'Belum ada event' :'$titleNotif...',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  )),
+                                ],
+                              )
+                            ))),
+                  ),
                 ),
               )
             ],

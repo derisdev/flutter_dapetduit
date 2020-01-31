@@ -63,4 +63,11 @@ class DBHelperNotif {
 
     return list;
   }
+
+  Future<String> getLastNotif() async {
+    final db = await database;
+    final res = await db.rawQuery("SELECT * FROM Notif ORDER BY title DESC LIMIT 1");
+    String title = res.last['title'];
+    return title;
+  }
 }

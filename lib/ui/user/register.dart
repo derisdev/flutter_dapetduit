@@ -93,7 +93,7 @@ class _RegisterState extends State<Register> {
 
       
       //create dynamic Link
-      String refferalOwner = randomAlphaNumeric(5);
+      String refferalOwner = randomAlphaNumeric(6);
 
       prefs.setString('refferal_code_owner', refferalOwner);
 
