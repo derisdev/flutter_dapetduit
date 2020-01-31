@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController refferalController = TextEditingController();
 
-  String refferalCode = "";
+  String refferalCode = "null";
 
   FetchData fetchData = new FetchData();
 
@@ -75,6 +75,7 @@ class _RegisterState extends State<Register> {
       'refferal': '${refferalController.text}'
     });
     if (response.statusCode == 201) {
+      print('refferal controller ${refferalController.text}');
       final jsonData = json.decode(response.body);
       String token = jsonData['token'];
       String name = jsonData['user']['name'];
@@ -87,9 +88,10 @@ class _RegisterState extends State<Register> {
       prefs.setInt('user_id', userId);
       prefs.setString('refferal_code_refferer', refferalController.text);
 
-      if(refferalController.text != null) {
+      if(refferalController.text != "null") {
         prefs.setBool('haveRefferal', true);
       }
+      
 
       
       //create dynamic Link

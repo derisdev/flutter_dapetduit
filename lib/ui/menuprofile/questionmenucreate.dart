@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QuestionMenuCreate extends StatefulWidget {
   @override
@@ -56,7 +57,7 @@ class _QuestionMenuCreateState extends State<QuestionMenuCreate> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)
                             ),
-                            color: Colors.green,
+                            color: Color(0xff24bd64),
                             child: Row(
                               children: <Widget>[
                                 Icon(Icons.phone, color: Colors.white, size: 30,),
@@ -64,7 +65,9 @@ class _QuestionMenuCreateState extends State<QuestionMenuCreate> {
                                 Text('WhatsApp',  style: TextStyle(color: Colors.white, fontSize: 20))
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              _launchURL('https://api.whatsapp.com/send?phone=6285719632945&text=Phone:%0ASubject:%0AKategori%20Masalah:%0ARincian%20Masalah:%0A%0A%0AMohon%20Sertakan%20Screenshot.%0A%0A*Pilihan%20Kategori:Login,%20Misi,%20Aktivitas,%20Kesalahan/Bug,%20Koin/Uang,%20Masukan,%20Lain');
+                            },
                           ),
                         ),
                         SizedBox(height: 30,),
@@ -79,11 +82,13 @@ class _QuestionMenuCreateState extends State<QuestionMenuCreate> {
                             child: Row(
                               children: <Widget>[
                                 Icon(Icons.mail, color: Colors.white, size: 30,),
-                                SizedBox(width: 20,),
+                                SizedBox(width: 40,),
                                 Text('Email',  style: TextStyle(color: Colors.white, fontSize: 20))
                               ],
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              _launchURL('mailto:deris.dev7@gmail.com?subject=Feedback-DapetDuit&body=Phone:\nKategori Masalah: \nRincian Masalah: \nMohon sertakan screenshot');
+                            },
                           ),
                         ),
                       ],
@@ -94,4 +99,11 @@ class _QuestionMenuCreateState extends State<QuestionMenuCreate> {
       ],
     );
   }
+  _launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 }

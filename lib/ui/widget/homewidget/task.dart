@@ -75,7 +75,7 @@ class _TaskState extends State<Task>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isHaveRefferal = prefs.getBool('haveRefferal');
 
-    if(isHaveRefferal) {
+    if(isHaveRefferal == true) {
       setState(() {
       currentCoin += 150;
     });

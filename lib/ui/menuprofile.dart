@@ -115,7 +115,7 @@ class _MenuProfileState extends State<MenuProfile> {
                                                   ? SpinKitThreeBounce(
                                                       size: 20,
                                                       color: Colors.amber)
-                                                  : Text(phone,
+                                                  : Text('+62$phone',
                                                       style: TextStyle(
                                                           fontSize: 15,
                                                           color: Colors.grey))
@@ -194,7 +194,7 @@ class _MenuProfileState extends State<MenuProfile> {
                                   ),
                                   Divider(),
                                   ListTile(
-                                    leading: Icon(Icons.replay),
+                                    leading: Icon(Icons.help),
                                     title: Text('Bantuan'),
                                     trailing: Icon(Icons.chevron_right),
                                     onTap: () {

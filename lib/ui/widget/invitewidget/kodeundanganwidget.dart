@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KodeUndanganWidget extends StatefulWidget {
@@ -29,14 +32,14 @@ class _KodeUndanganState extends State<KodeUndanganWidget> {
       child: Container(
         decoration: new BoxDecoration(
             gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      stops: [0.1, 0.9],
-                      colors: [
-                        Colors.blueAccent,
-                        Colors.greenAccent,
-                      ],
-                    ),
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.9],
+              colors: [
+                Colors.blueAccent,
+                Colors.greenAccent,
+              ],
+            ),
             borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(30.0),
                 topRight: const Radius.circular(30.0))),
@@ -74,7 +77,7 @@ class _KodeUndanganState extends State<KodeUndanganWidget> {
                 child: ClipPath(
                   clipper: OvalLeftBorderClipper(),
                   child: Container(
-                    height: 60,
+                    height: 65,
                     width: 270,
                     color: Colors.blueAccent,
                     child: Padding(
@@ -140,38 +143,103 @@ class _KodeUndanganState extends State<KodeUndanganWidget> {
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(10.0),
                       side: BorderSide(color: Colors.blue)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 25),
-                          child: Column(
-                            children: <Widget>[
-                              Text('Kode Undangan Anda',
-                                  style: TextStyle(color: Colors.blue)),
-                              Text(
-                                  refferalCode == null
-                                      ? 'belum ada'
-                                      : refferalCode,
-                                  style: TextStyle(
-                                      fontSize: 25, color: Colors.blue)),
-                            ],
-                          ),
+                        Text('Kode Undangan Anda',
+                            style: TextStyle(color: Colors.blue)),
+                        SizedBox(
+                          height: 5,
                         ),
-                        VerticalDivider(
-                          color: Colors.blue,
+                        InkWell(
+                          onLongPress: () {
+                            Clipboard.setData(
+                                ClipboardData(text: refferalCode));
+                            Scaffold.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.green,
+                                  content: Text('Copied Refferal Code!')),
+                            );
+                          },
+                          child: Text(
+                              refferalCode == null ? 'belum ada' : refferalCode,
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline)),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Text('Copy\nKode',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.blue)),
-                        ),
-                      ]),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
                 height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: 135,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      color: Color(0xff24bd64),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.phone,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text('WhatsApp',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15))
+                        ],
+                      ),
+                      onPressed: () {
+                        FlutterShareMe()
+                       .shareToWhatsApp(msg: 'Ayo bergabung bersama saya di Aplikasi DapetDuit dan dapatkan penghasilan Lebih.\n\nGunakan kode Refferal $refferalCode');
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 135,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      color: Colors.blueAccent,
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.share,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text('Lainnya',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15))
+                        ],
+                      ),
+                      onPressed: () {
+                        Share.share('Ayo bergabung bersama saya di Aplikasi DapetDuit dan dapatkan penghasilan Lebih.\nGunakan kode Refferal $refferalCode');
+
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 50,
               )
             ],
           ),

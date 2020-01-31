@@ -1,4 +1,5 @@
 import 'package:dapetduit/service/fetchdata.dart';
+import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:dapetduit/ui/widget/invitewidget/kodeundanganwidget.dart';
 import 'package:dapetduit/ui/widget/invitewidget/linkwidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -223,14 +224,21 @@ class _InviteState extends State<Invite> {
                 ),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0),
-                      margin: EdgeInsets.only(top: 40.0),
-                      child: Image.asset(
-                        'images/icon/menu.png',
-                        width: 30,
-                        height: 30,
-                      )),
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => MenuProfile()
+                      ));
+                    },
+                    child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 25.0),
+                        margin: EdgeInsets.only(top: 40.0),
+                        child: Image.asset(
+                          'images/icon/menu.png',
+                          width: 30,
+                          height: 30,
+                        )),
+                  ),
                 ),
               ],
             ),

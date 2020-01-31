@@ -1,5 +1,6 @@
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +12,50 @@ class WithdrawPayouts extends StatefulWidget {
 
 class _WithdrawPayoutsState extends State<WithdrawPayouts> {
   bool isLoading = false;
+  bool isVerified = false;
+  String phone;
+  int currentCoin;
   FetchData fetchData = new FetchData();
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentCoin();
+    checkPhoneNumber();
+  }
+
+  Future checkPhoneNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String phone = prefs.getString('phone');
+
+    if (phone == null) {
+      setState(() {
+        isVerified = false;
+      });
+    } else {
+      setState(() {
+        isVerified = true;
+      });
+    }
+
+    setState(() {
+      this.phone = phone;
+    });
+  }
+
+  Future getCurrentCoin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int coin = prefs.getInt('coin');
+    if (coin == null) {
+      setState(() {
+        currentCoin = 0;
+      });
+    } else {
+      setState(() {
+        currentCoin = coin;
+      });
+    }
+  }
 
   Future withdraw(String via, String amount) async {
     setState(() {
@@ -21,6 +65,30 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
     setState(() {
       isLoading = false;
     });
+
+    
+  }
+
+  onClickPayment(String via, String amount) {
+      currentCoin > 5000
+                          ? isVerified
+                              ? showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      _onTapCard(context, via, amount))
+                              : showToastWIthdraw('Harap verifikasi Nomor Terlebih dahulu. Tap icon Menu di pojok kiri atas')
+                          : showToastWIthdraw('Koin Anda Belum Mencukupi untuk melakukan penukaran ini');
+    }
+
+   showToastWIthdraw(String msg) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        fontSize: 14.0,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white);
   }
 
   @override
@@ -28,32 +96,34 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
     return SingleChildScrollView(
         child: Column(
       children: <Widget>[
-        isLoading? SpinKitThreeBounce(size: 30, color: Colors.amber) : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Card(
-            elevation: 3,
-            child: ListTile(
-              leading: ClipRRect(
-                  borderRadius: new BorderRadius.circular(8.0),
-                  child: Image.asset('images/icon/dana.jpeg')),
-              title: Text('IDR 10.000'),
-              subtitle: Text(
-                'DANA',
+        isLoading
+            ? SpinKitThreeBounce(size: 30, color: Colors.amber)
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Card(
+                  elevation: 0.5,
+                  child: ListTile(
+                    leading: ClipRRect(
+                        borderRadius: new BorderRadius.circular(8.0),
+                        child: Image.asset('images/icon/dana.jpeg')),
+                    title: Text('IDR 10.000'),
+                    subtitle: Text(
+                      'DANA',
+                    ),
+                    trailing: Text(
+                      '5000 koin',
+                      style: TextStyle(color: Colors.amber),
+                    ),
+                    onTap: () {
+                      onClickPayment('DANA', 'IDR 10.000');
+                    },
+                  ),
+                ),
               ),
-              trailing: Text(
-                '1700 koin',
-                style: TextStyle(color: Colors.amber),
-              ),
-              onTap: () {
-                withdraw('DANA', "IDR 10.000");
-              },
-            ),
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Card(
-            elevation: 3,
+            elevation: 0.5,
             child: ListTile(
               leading: ClipRRect(
                   borderRadius: new BorderRadius.circular(8.0),
@@ -63,7 +133,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 'GO-Pay',
               ),
               trailing: Text(
-                '2000 koin',
+                '5000 koin',
                 style: TextStyle(color: Colors.amber),
               ),
               onTap: () {},
@@ -73,7 +143,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Card(
-            elevation: 3,
+            elevation: 0.5,
             child: ListTile(
               leading: ClipRRect(
                   borderRadius: new BorderRadius.circular(8.0),
@@ -83,7 +153,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 'OVO',
               ),
               trailing: Text(
-                '3000 koin',
+                '9000 koin',
                 style: TextStyle(color: Colors.amber),
               ),
               onTap: () {},
@@ -93,7 +163,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Card(
-            elevation: 3,
+            elevation: 0.5,
             child: ListTile(
               leading: ClipRRect(
                   borderRadius: new BorderRadius.circular(8.0),
@@ -103,7 +173,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 'DANA',
               ),
               trailing: Text(
-                '3200 koin',
+                '9000 koin',
                 style: TextStyle(color: Colors.amber),
               ),
               onTap: () {},
@@ -113,7 +183,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Card(
-            elevation: 3,
+            elevation: 0.5,
             child: ListTile(
               leading: ClipRRect(
                   borderRadius: new BorderRadius.circular(8.0),
@@ -123,7 +193,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 'DANA',
               ),
               trailing: Text(
-                '3800 koin',
+                '11000 koin',
                 style: TextStyle(color: Colors.amber),
               ),
               onTap: () {},
@@ -133,7 +203,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Card(
-            elevation: 3,
+            elevation: 0.5,
             child: ListTile(
               leading: ClipRRect(
                   borderRadius: new BorderRadius.circular(8.0),
@@ -143,7 +213,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 'Go-Pay',
               ),
               trailing: Text(
-                '4000 koin',
+                '11000 koin',
                 style: TextStyle(color: Colors.amber),
               ),
               onTap: () {},
@@ -152,5 +222,34 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
         ),
       ],
     ));
+  }
+
+  _onTapCard(BuildContext context, String via, String amount) {
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Image.asset('images/icon/dana.jpeg'),
+                    Text('Lakukan Penukaran 5000 coin dengan IDR 10.000'),
+                    RaisedButton(
+                      child: Text('Lanjut'),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+              )),
+        ),
+      ],
+    );
   }
 }

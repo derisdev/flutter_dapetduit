@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LinkWidget extends StatefulWidget {
@@ -29,14 +32,14 @@ class _LinkWidgetState extends State<LinkWidget> {
       child: Container(
         decoration: new BoxDecoration(
             gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      stops: [0.1, 0.9],
-                      colors: [
-                        Colors.blueAccent,
-                        Colors.greenAccent,
-                      ],
-                    ),
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.9],
+              colors: [
+                Colors.blueAccent,
+                Colors.greenAccent,
+              ],
+            ),
             borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(30.0),
                 topRight: const Radius.circular(30.0))),
@@ -135,34 +138,96 @@ class _LinkWidgetState extends State<LinkWidget> {
                 height: 20,
               ),
               Container(
-                height: 100,
+                height: 70,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(10.0),
-                      side: BorderSide(color: Colors.orange)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                            width: 170,
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text(
-                                linkRefferal == null
-                                    ? 'belum ada'
-                                    : linkRefferal,
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.blue))),
-                        VerticalDivider(
-                          color: Colors.orange,
-                        ),
-                        Text('Copy\nURL',
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.orange))
-                      ]),
+                      side: BorderSide(color: Colors.blueAccent)),
+                  child: Center(
+                    child: InkWell(
+                      onLongPress: () {
+                        Clipboard.setData(ClipboardData(text: linkRefferal));
+                        Scaffold.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.green,
+                              content: Text('Copied Link!')),
+                        );
+                      },
+                      child: Text(
+                          linkRefferal == null ? 'belum ada' : linkRefferal,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline)),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
                 height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: 135,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      color: Color(0xff24bd64),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.phone,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text('WhatsApp',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15))
+                        ],
+                      ),
+                      onPressed: () {
+                        FlutterShareMe()
+                       .shareToWhatsApp(msg: 'Ayo bergabung bersama saya di Aplikasi DapetDuit dan dapatkan penghasilan Lebih.\nDownload melalui Link dibawah \n\n $linkRefferal');
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 135,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      color: Colors.blueAccent,
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.share,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text('Lainnya',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15))
+                        ],
+                      ),
+                      onPressed: () {
+                        Share.share('Ayo bergabung bersama saya di Aplikasi DapetDuit dan dapatkan penghasilan Lebih.\nDownload melalui Link dibawah \n\n $linkRefferal');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 50,
               )
             ],
           ),
