@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController refferalController = TextEditingController();
 
-  String refferalCode = "null";
+  String refferalCode = "";
 
   FetchData fetchData = new FetchData();
 
@@ -88,7 +88,7 @@ class _RegisterState extends State<Register> {
       prefs.setInt('user_id', userId);
       prefs.setString('refferal_code_refferer', refferalController.text);
 
-      if(refferalController.text != "null") {
+      if(refferalController.text != "") {
         prefs.setBool('haveRefferal', true);
       }
       

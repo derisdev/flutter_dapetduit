@@ -1,3 +1,4 @@
+import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:dapetduit/ui/widget/payoutswidget/historypayouts.dart';
 import 'package:dapetduit/ui/widget/payoutswidget/withdrawpayouts.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -137,14 +138,21 @@ class _PayoutsState extends State<Payouts> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                margin: EdgeInsets.only(top: 40.0),
-                child: Image.asset(
-                  'images/icon/menu.png',
-                  width: 30,
-                  height: 30,
-                )),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => MenuProfile()
+                ));
+              },
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  margin: EdgeInsets.only(top: 40.0),
+                  child: Image.asset(
+                    'images/icon/menu.png',
+                    width: 30,
+                    height: 30,
+                  )),
+            ),
           ),
         ],
       ),

@@ -9,29 +9,33 @@ class PhoneVerification extends StatefulWidget {
 }
 
 class _PhoneVerificationState extends State<PhoneVerification> {
-
-
   bool isLoading = false;
+  bool _validate = false;
   FetchData fetchData = new FetchData();
 
   TextEditingController phoneController = TextEditingController();
 
   Future verifyPhone() async {
     setState(() {
-     isLoading = true; 
+      isLoading = true;
     });
 
     await fetchData.phoneVerify(phoneController.text);
 
     await Future.delayed(Duration(seconds: 2));
-    
+
     setState(() {
-     isLoading = false; 
+      isLoading = false;
     });
     Navigator.pop(context);
-    Navigator.pushReplacement(context, MaterialPageRoute(
-      builder: (context) => MenuProfile()
-    ));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => MenuProfile()));
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,7 +53,10 @@ class _PhoneVerificationState extends State<PhoneVerification> {
               Container(
                 padding: EdgeInsets.only(top: 60),
                 child: Text(
-                  'Silahkan masukkan nomor ponsel Anda dan mendapatkan kode', style: TextStyle(fontSize: 15),textAlign: TextAlign.center,),
+                  'Silahkan masukkan nomor ponsel Anda',
+                  style: TextStyle(fontSize: 15),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Container(
                 width: 300,
@@ -60,16 +67,13 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                     style: TextStyle(color: Colors.black, fontSize: 15),
                     controller: phoneController,
                     keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Nomor harus diisi';
-                      }
-                      return null;
-                    },
                     decoration: InputDecoration(
+                        errorText:
+                            _validate ? 'Nomor Telpon harus diisi' : null,
                         contentPadding: EdgeInsets.all(12.0),
                         prefixText: '+62',
-                        prefixStyle: TextStyle(color: Colors.black, fontSize: 15),
+                        prefixStyle:
+                            TextStyle(color: Colors.black, fontSize: 15),
                         labelText: 'Nomor Telepon',
                         labelStyle: TextStyle(color: Colors.grey),
                         enabledBorder: OutlineInputBorder(
@@ -81,23 +85,110 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                   ),
                 ),
               ),
-              SizedBox(height: 40,),
+              SizedBox(
+                height: 40,
+              ),
               Container(
-                width: 300,
-                height: 45,
-                child: isLoading?
-                          SpinKitThreeBounce(
-                            size: 50,
-                            color: Colors.amber,
-                          )
-                           : RaisedButton(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                            color: Colors.amber,
-                            child: Text('Yakin', style:  TextStyle(color: Colors.white),),
-                            onPressed: (){
+                  width: 300,
+                  height: 45,
+                  child: isLoading
+                      ? SpinKitThreeBounce(
+                          size: 50,
+                          color: Colors.amber,
+                        )
+                      : RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          color: Colors.amber,
+                          child: Text(
+                            'Yakin',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              phoneController.text.isEmpty
+                                  ? _validate = true
+                                  : _validate = false;
+                            });
+                            if(_validate == false){
                               verifyPhone();
-                            },
-              ))
+                            }
+                          },
+                        )),
+              SizedBox(
+                height: 50,
+              ),
+              Text('Perhatian',
+                  style: TextStyle(color: Colors.amber, fontSize: 20)),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    height: 10,
+                    child: FloatingActionButton(
+                      heroTag: 'one',
+                      backgroundColor: Colors.black,
+                      elevation: 0,
+                      onPressed: () {},
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Flexible(
+                      child: Text(
+                          'Satu Nomor Telepon hanya bisa digunakan pada satu akun.'))
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    height: 10,
+                    child: FloatingActionButton(
+                      heroTag: 'two',
+                      backgroundColor: Colors.black,
+                      elevation: 0,
+                      onPressed: () {},
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Flexible(
+                      child: Text(
+                          'Pastikan Nomor Telpon Telah terhubung dengan salah satu metode pembayaran baik DANA, GOPAY, maupun OVO.'))
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    height: 10,
+                    child: FloatingActionButton(
+                      heroTag: 'three',
+                      backgroundColor: Colors.black,
+                      elevation: 0,
+                      onPressed: () {},
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Flexible(
+                      child: Text(
+                          'Untuk sementara belum tersedia fitur Login. Sehingga jika aplikasi terhapus, anda harus membuat akun baru dengan Nomor Telepon yang baru.'))
+                ],
+              )
             ],
           ),
         ),

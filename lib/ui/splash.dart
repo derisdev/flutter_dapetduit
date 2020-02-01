@@ -30,7 +30,7 @@ class _SplashState extends State<Splash> {
               if (internet != null && internet) {
                 initAllDataFromDB();
                 Timer(
-                    Duration(seconds: 3),
+                    Duration(seconds: 1),
                     () => Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (BuildContext context) {
                           return login ? HomePage() : Register();
@@ -106,22 +106,10 @@ class _SplashState extends State<Splash> {
                         child: Text('Coba Lagi',
                             style: TextStyle(color: Colors.blue)),
                         onPressed: () {
-                          checkInternet().then((internet) {
-                            if (internet != null && internet) {
-                              Navigator.pop(context);
-                              initAllDataFromDB();
-                              Timer(
-                                  Duration(seconds: 3),
-                                  () => Navigator.pushReplacement(context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                        return login ? HomePage() : Register();
-                                      })));
-                            } else {
-                              Navigator.pop(context);
-                              _onConnection();
-                            }
-                          });
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Splash()));
                         }),
                     SizedBox(
                       width: 40,
@@ -136,7 +124,7 @@ class _SplashState extends State<Splash> {
     await fetchData.readRewards();
     await fetchData.readPayment();
     await fetchData.readNotif();
-    
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFeedbackLoaded', false);
     await prefs.setBool('isInviteLoaded', false);
@@ -145,15 +133,12 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
-        child: Center(
-          child: Text(
-            'Dapet Duit',
-            style: TextStyle(
-                color: Colors.yellow, fontSize: 30.0, fontFamily: 'neue'),
-          ),
-        ),
+      backgroundColor: Colors.transparent,
+      body: Image.asset(
+        'images/splashbg.png',
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
       ),
     );
   }

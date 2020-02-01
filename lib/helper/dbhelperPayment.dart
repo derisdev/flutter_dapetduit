@@ -57,7 +57,7 @@ class DBHelperPayment {
 
   Future<List<Payment>> getAllPayment() async {
     final db = await database;
-    final res = await db.rawQuery("SELECT * FROM Payment");
+    final res = await db.rawQuery("SELECT * FROM Payment ORDER BY id DESC");
 
     List<Payment> list =
         res.isNotEmpty ? res.map((c) => Payment.fromJson(c)).toList() : null;

@@ -48,7 +48,7 @@ class _QuestionMenuCreateState extends State<QuestionMenuCreate> {
                       children: <Widget>[
                         Text('Sampaikan keluhanmu disini', style: TextStyle(fontSize: 20),),
                         SizedBox(height: 30,),
-                        Text('Kamu dapat menyampaikan keluhanmu melalui email atau WA melalui tombol dibawah.', style: TextStyle(),),
+                        Text('Kamu dapat menyampaikan masalahmu melalui email atau WA melalui tombol dibawah.', style: TextStyle(),),
                         SizedBox(height: 100,),
                         Container(
                           width: 200,

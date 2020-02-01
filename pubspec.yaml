@@ -57,6 +57,11 @@ flutter:
     - images/icon/isbanner.jpg
     - images/icon/menu.png
     - images/background.jpeg
+    - images/rewardscoin.png
+    - images/rewardsmain.png
+    - images/notenough.png
+    - images/withdrawcash.png
+    - images/splashbg.png
 
 
  

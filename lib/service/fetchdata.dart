@@ -210,7 +210,7 @@ class FetchData {
     String token = prefs.getString('token');
 
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEE d MMM').format(now);
+    String formattedDate = DateFormat('d MMM yyyy, h:mm').format(now);
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/payment?token=$token";
@@ -225,7 +225,18 @@ class FetchData {
           'time' : formattedDate
           });
     if (response.statusCode == 201) {
-      print('Payment created');
+      return true;
+    }
+    else {
+      Fluttertoast.showToast(
+          msg:
+          'Terjadi Kesalahan. Coba Lagi nanti',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 14.0,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
     }
     print(response.statusCode);
     print(response.body);

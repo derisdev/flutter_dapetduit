@@ -43,9 +43,11 @@ class _InviteState extends State<Invite> {
 
     FetchData fetchData = FetchData();
     await fetchData.readRefferal().then((invited) {
-      setState(() {
+      if(mounted){
+        setState(() {
         this.currentInvited = int.parse(invited);
       });
+      }
     });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -53,9 +55,11 @@ class _InviteState extends State<Invite> {
 
     await Future.delayed(const Duration(seconds: 2));
 
-    setState(() {
+    if(mounted) {
+      setState(() {
       isLoading = false;
     });
+    }
   }
 
   Future getCurrentInvite() async {

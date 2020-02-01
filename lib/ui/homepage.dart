@@ -70,7 +70,7 @@ Future<bool> onWillPop() {
     if (currentBackPressTime == null || 
         now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Fluttertoast.showToast(msg: 'press sekali lagi untuk keluar');
+      Fluttertoast.showToast(msg: 'tekan sekali lagi untuk keluar');
       return Future.value(false);
     }
     return Future.value(true);
