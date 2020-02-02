@@ -47,7 +47,7 @@ class _HistoryState extends State<History> {
       appBar: AppBar(
         title: Text('History'),
         backgroundColor: Color(0xff24bd64),
-        elevation: 7.0,
+        elevation: 0.0,
       ),
       body: isLoading?  Container(
         alignment: Alignment.center,

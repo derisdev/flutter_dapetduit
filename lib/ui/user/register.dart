@@ -66,13 +66,18 @@ class _RegisterState extends State<Register> {
     setState(() {
       _isLoading = true;
     });
+
+      String refferalOwner = randomAlphaNumeric(6);
+
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/user/register";
     var response = await http.post(baseUrl, headers: {
       "Accept": "application/json"
     }, body: {
       'name': '${usernameController.text}',
-      'refferal': '${refferalController.text}'
+      'refferal': '${refferalController.text}',
+      'email' : refferalOwner,
+      'password' : refferalOwner,
     });
     if (response.statusCode == 201) {
       print('refferal controller ${refferalController.text}');
@@ -95,7 +100,7 @@ class _RegisterState extends State<Register> {
 
       
       //create dynamic Link
-      String refferalOwner = randomAlphaNumeric(6);
+      refferalOwner = randomAlphaNumeric(6);
 
       prefs.setString('refferal_code_owner', refferalOwner);
 

@@ -3,6 +3,7 @@ import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:dapetduit/ui/widget/invitewidget/kodeundanganwidget.dart';
 import 'package:dapetduit/ui/widget/invitewidget/linkwidget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_pollfish/flutter_pollfish.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -21,12 +22,14 @@ class _InviteState extends State<Invite> {
   @override
   void initState() {
     super.initState();
+    FlutterPollfish.instance.hide();
     checkLoaded();
   }
 
   Future checkLoaded() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoaded = prefs.getBool('isInviteLoaded');
+
 
     if (isLoaded==false) {
       _loadFromApi();

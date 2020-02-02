@@ -105,7 +105,7 @@ class _LinkWidgetState extends State<LinkWidget> {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        "3. Temanmu akan mendapat 150 koin setelah selesai misi",
+                        "3. Temanmu akan mendapat 500 koin setelah berhasil mendaftar",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

@@ -29,7 +29,9 @@ dependencies:
   share: ^0.6.3+5
   flutter_share_me: ^0.9.1
   url_launcher: ^5.4.1
-
+  countdown_flutter: ^0.1.1
+  flutter_pollfish: ^0.2.1
+  adcolony: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +64,7 @@ flutter:
     - images/notenough.png
     - images/withdrawcash.png
     - images/splashbg.png
+    - images/instagram.png
 
 
  

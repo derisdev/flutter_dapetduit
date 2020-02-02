@@ -1,8 +1,10 @@
+import 'package:adcolony/AdColony.dart';
 import 'package:dapetduit/ui/widget/homewidget/moretask.dart';
 import 'package:dapetduit/ui/widget/homewidget/payouts.dart';
 import 'package:dapetduit/ui/widget/homewidget/invite.dart';
 import 'package:dapetduit/ui/widget/homewidget/task.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pollfish/flutter_pollfish.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
@@ -12,6 +14,24 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+
+  @override
+  void initState() { 
+    super.initState();
+    initPollfish();
+   
+  }
+    Future<void> initPollfish() async {
+    await FlutterPollfish.instance.init(
+        apiKey: '63f82c3f-6101-448e-94d3-4cb1c259d19a',
+        pollfishPosition: 3,
+        rewardMode: false,
+        releaseMode: false,
+        offerwallMode: true,
+        requestUUID: null);
+    }
+
+
 
   DateTime currentBackPressTime;
   

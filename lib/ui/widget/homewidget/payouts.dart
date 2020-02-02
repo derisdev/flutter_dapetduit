@@ -1,6 +1,7 @@
 import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:dapetduit/ui/widget/payoutswidget/historypayouts.dart';
 import 'package:dapetduit/ui/widget/payoutswidget/withdrawpayouts.dart';
+import 'package:flutter_pollfish/flutter_pollfish.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +19,7 @@ class _PayoutsState extends State<Payouts> {
   @override
   void initState() {
     super.initState();
+    FlutterPollfish.instance.hide();
     getCurrentCoin();
   }
 

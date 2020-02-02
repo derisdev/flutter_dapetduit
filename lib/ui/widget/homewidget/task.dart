@@ -2,6 +2,7 @@ import 'package:dapetduit/helper/dbhelperNotif.dart';
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:dapetduit/ui/menuprofile.dart';
 import 'package:dapetduit/ui/menuprofile/notifmenu.dart';
+import 'package:flutter_pollfish/flutter_pollfish.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:dapetduit/helper/dbhelper.dart';
 import 'package:intl/intl.dart';
@@ -27,34 +28,33 @@ class _TaskState extends State<Task>
 
   final String appKey = "b0d4544d";
 
-  bool rewardeVideoAvailable = false,
-      offerwallAvailable = false,
-      showBanner = false,
-      interstitialReady = false;
+   bool offerwallAvailable = false;
   @override
   void initState() {
     super.initState();
+
+    FlutterPollfish.instance.hide();
 
     getLastNotifFromdb();
     getCurrentCoin();
     WidgetsBinding.instance.addObserver(this);
     init();
+    initPollfish();
     giftRewardIfHaveRefferal();
   }
 
-  Future  getLastNotifFromdb() async {
-    DBHelperNotif.db.getLastNotif().then((title){
+  Future getLastNotifFromdb() async {
+    DBHelperNotif.db.getLastNotif().then((title) {
+      List<String> titleNotifs = title.split(' ');
 
-       List<String> titleNotifs = title.split(' ');
-       
-       setState(() {
-        this.titleNotif = '${titleNotifs[0]} ${titleNotifs[1]} ${titleNotifs[2]}'; 
-       });
+      setState(() {
+        this.titleNotif =
+            '${titleNotifs[0]} ${titleNotifs[1]} ${titleNotifs[2]}';
+      });
 
       print(titleNotif);
     });
   }
-
 
   Future getCurrentCoin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -75,22 +75,117 @@ class _TaskState extends State<Task>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isHaveRefferal = prefs.getBool('haveRefferal');
 
-    if(isHaveRefferal == true) {
+    if (isHaveRefferal == true) {
       setState(() {
-      currentCoin += 150;
-    });
+        currentCoin += 500;
+      });
 
-    savetoPrefs(currentCoin);
-    saveHistory(150, 'Refferal');
-    rewardConfirm(context, 150);
-    savetoDBFirst(150);
+      savetoPrefs(currentCoin);
+      saveHistory(500, 'Refferal');
+      savetoDBFirst(500);
+      showDialog(
+          context: context, builder: (context) => _onGetRewards(context, 500));
     }
 
     prefs.setBool('haveRefferal', false);
-    
   }
 
+  Future<void> initPollfish() async {
+    FlutterPollfish.instance
+        .setPollfishReceivedSurveyListener(onPollfishSurveyReveived);
+    FlutterPollfish.instance
+        .setPollfishCompletedSurveyListener(onPollfishSurveyCompleted);
+    FlutterPollfish.instance
+        .setPollfishSurveyOpenedListener(onPollfishSurveyOpened);
+    FlutterPollfish.instance
+        .setPollfishSurveyClosedListener(onPollfishSurveyClosed);
+    FlutterPollfish.instance.setPollfishSurveyNotAvailableSurveyListener(
+        onPollfishSurveyNotAvailable);
+    FlutterPollfish.instance
+        .setPollfishUserRejectedSurveyListener(onPollfishUserRejectedSurvey);
+    FlutterPollfish.instance
+        .setPollfishUserNotEligibleListener(onPollfishUserNotEligible);
+  }
 
+  void onPollfishSurveyReveived(String result) => setState(() {
+        List<String> surveyCharacteristics = result.split(',');
+
+        if (surveyCharacteristics.length >= 6) {
+          String _logText =
+              'Survey Received: - SurveyInfo with CPA: ${surveyCharacteristics[0]} and IR: ${surveyCharacteristics[1]} and LOI: ${surveyCharacteristics[2]} and SurveyClass: ${surveyCharacteristics[3]} and RewardName: ${surveyCharacteristics[4]}  and RewardValue: ${surveyCharacteristics[5]}';
+          print('Received $_logText');
+        }
+      });
+
+  void onPollfishSurveyCompleted(String result) => setState(() {
+        List<String> surveyCharacteristics = result.split(',');
+
+        if (surveyCharacteristics.length >= 6) {
+          String _logText =
+              'Survey Completed: - SurveyInfo with CPA: ${surveyCharacteristics[0]} and IR: ${surveyCharacteristics[1]} and LOI: ${surveyCharacteristics[2]} and SurveyClass: ${surveyCharacteristics[3]} and RewardName: ${surveyCharacteristics[4]}  and RewardValue: ${surveyCharacteristics[5]}';
+          print('complete $_logText');
+          setState(() {
+            currentCoin += int.parse(surveyCharacteristics[5]);
+          });
+
+          savetoPrefs(currentCoin);
+          saveHistory(int.parse(surveyCharacteristics[5]), 'Survey Rewards');
+          savetoDB(int.parse(surveyCharacteristics[5]));
+          showDialog(
+              context: context,
+              builder: (context) =>
+                  _onGetRewards(context, int.parse(surveyCharacteristics[5])));
+        }
+      });
+
+  void onPollfishSurveyOpened() => setState(() {
+        String _logText = 'Survey Panel Open';
+        print(_logText);
+      });
+
+  void onPollfishSurveyClosed() => setState(() {
+        String _logText = 'Survey Panel Closed';
+        print(_logText);
+      });
+
+  void onPollfishSurveyNotAvailable() => setState(() {
+        String _logText = 'Survey Not Available';
+        print(_logText);
+        Fluttertoast.showToast(
+            msg: 'Mohon Tunggu sebentar. Survei sedang di persiapkan',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            fontSize: 14.0,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white);
+      });
+
+  void onPollfishUserRejectedSurvey() => setState(() {
+        String _logText = 'User Rejected Survey';
+        print(_logText);
+        Fluttertoast.showToast(
+            msg: 'Survei mungkin tidak cocok untuk anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            fontSize: 14.0,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white);
+      });
+
+  void onPollfishUserNotEligible() => setState(() {
+        String _logText = 'User Not Eligible';
+        print(_logText);
+        Fluttertoast.showToast(
+            msg: 'Survei mungkin tidak cocok untuk anda',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            fontSize: 14.0,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white);
+      });
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -113,32 +208,16 @@ class _TaskState extends State<Task>
     await IronSource.validateIntegration();
     await IronSource.setUserId(userId);
     await IronSource.initialize(appKey: appKey, listener: this);
-    rewardeVideoAvailable = await IronSource.isRewardedVideoAvailable();
     offerwallAvailable = await IronSource.isOfferwallAvailable();
-    setState(() {});
   }
 
-  void loadInterstitial() {
-    IronSource.loadInterstitial();
-  }
-
-  void showInterstitial() async {
-    if (await IronSource.isInterstitialReady()) {
-      IronSource.showInterstitial();
-    } else {
-      print(
-        "Interstial is not ready. use 'Ironsource.loadInterstial' before showing it",
-      );
-    }
-  }
 
   void showOfferwall() async {
     if (await IronSource.isOfferwallAvailable()) {
       IronSource.showOfferwall();
     } else {
       Fluttertoast.showToast(
-          msg:
-              "Tunggu sebentar. Offerwall sedang di persiapkan",
+          msg: "Tunggu sebentar. Offerwall sedang di persiapkan",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIos: 1,
@@ -148,26 +227,6 @@ class _TaskState extends State<Task>
     }
   }
 
-  void showRewardedVideo() async {
-    if (await IronSource.isRewardedVideoAvailable()) {
-      IronSource.showRewardedVideol();
-    } else {
-      Fluttertoast.showToast(
-          msg: "Video Rewards tidak tersedia untuk saat ini",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 1,
-          backgroundColor: Color(0xff24bd64),
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
-  }
-
-  void showHideBanner() {
-    setState(() {
-      showBanner = !showBanner;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,12 +245,13 @@ class _TaskState extends State<Task>
             leading: Container(
                 padding: EdgeInsets.all(15),
                 child: GestureDetector(
-                  onTap: (){
-                     Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => MenuProfile()
-                ));
-                  },
-                  child: Image.asset('images/icon/menu.png'))),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenuProfile()));
+                    },
+                    child: Image.asset('images/icon/menu.png'))),
             actions: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -199,7 +259,6 @@ class _TaskState extends State<Task>
                       MaterialPageRoute(builder: (context) => History()));
                 },
                 child: Container(
-                  
                   child: Row(
                     children: <Widget>[
                       Image.asset('images/icon/coin.png'),
@@ -240,7 +299,7 @@ class _TaskState extends State<Task>
                           height: 200,
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               showOfferwall();
                             },
                             child: Card(
@@ -255,7 +314,8 @@ class _TaskState extends State<Task>
                                   Row(
                                     children: <Widget>[
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 12),
+                                        padding:
+                                            const EdgeInsets.only(left: 12),
                                         child: Image.asset(
                                           'images/icon/is.png',
                                           height: 35,
@@ -263,7 +323,8 @@ class _TaskState extends State<Task>
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10),
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
                                         child: Text('Iron Source Offerwall',
                                             style: TextStyle(fontSize: 20)),
                                       ),
@@ -297,57 +358,63 @@ class _TaskState extends State<Task>
                         Container(
                           height: 200,
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 12),
+                          child: GestureDetector(
+                            onTap: () {
+                              FlutterPollfish.instance.show();
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 12),
+                                        child: Image.asset(
+                                          'images/icon/is.png',
+                                          height: 35,
+                                          width: 35,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text('Iron Source Offerwall',
+                                            style: TextStyle(fontSize: 20)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 125,
+                                    width: 305,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
                                       child: Image.asset(
-                                        'images/icon/is.png',
-                                        height: 35,
-                                        width: 35,
+                                        'images/icon/isbanner.jpg',
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Text('Iron Source Offerwall',
-                                          style: TextStyle(fontSize: 20)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 125,
-                                  width: 305,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.asset(
-                                      'images/icon/isbanner.jpg',
-                                      fit: BoxFit.fill,
-                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                )
-                              ],
+                                  SizedBox(
+                                    height: 10,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
                         SizedBox(
                           height: 150,
                         ),
-                    
                       ],
                     ),
                   ),
@@ -357,10 +424,9 @@ class _TaskState extends State<Task>
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => NotifMenu()
-                      ));
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => NotifMenu()));
                     },
                     child: Container(
                         margin: EdgeInsets.only(top: 50),
@@ -371,25 +437,31 @@ class _TaskState extends State<Task>
                             color: Colors.grey.withOpacity(0.2)),
                         child: Center(
                             child: Center(
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(width: 10,),
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    child: FloatingActionButton(
-                                      backgroundColor: Colors.red,
-                                      onPressed: (){},
-                                    ),
-                                  ),
-                                  SizedBox(width: 5,),
-                                  Text(titleNotif==null? 'Belum ada event' :'$titleNotif...',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  )),
-                                ],
-                              )
-                            ))),
+                                child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 10,
+                              height: 10,
+                              child: FloatingActionButton(
+                                backgroundColor: Colors.red,
+                                onPressed: () {},
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                                titleNotif == null
+                                    ? 'Belum ada event'
+                                    : '$titleNotif...',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                )),
+                          ],
+                        )))),
                   ),
                 ),
               )
@@ -400,69 +472,52 @@ class _TaskState extends State<Task>
 
   @override
   void onInterstitialAdClicked() {
-    print("onInterstitialAdClicked");
   }
 
   @override
   void onInterstitialAdClosed() {
-    print("onInterstitialAdClosed");
   }
 
   @override
   void onInterstitialAdLoadFailed(IronSourceError error) {
-    print("onInterstitialAdLoadFailed : ${error.toString()}");
   }
 
   @override
   void onInterstitialAdOpened() {
-    print("onInterstitialAdOpened");
-    setState(() {
-      interstitialReady = false;
-    });
   }
 
   @override
   void onInterstitialAdReady() {
-    print("onInterstitialAdReady");
-    setState(() {
-      interstitialReady = true;
-    });
   }
 
   @override
   void onInterstitialAdShowFailed(IronSourceError error) {
-    print("onInterstitialAdShowFailed : ${error.toString()}");
-    setState(() {
-      interstitialReady = false;
-    });
   }
 
   @override
   void onInterstitialAdShowSucceeded() {
-    print("nInterstitialAdShowSucceeded");
   }
 
   @override
   void onGetOfferwallCreditsFailed(IronSourceError error) {
-    print("onGetOfferwallCreditsFailed : ${error.toString()}");
   }
 
   @override
   void onOfferwallAdCredited(OfferwallCredit reward) {
-    print("onOfferwallAdCredited : ${reward.credits}");
     setState(() {
       currentCoin += reward.credits;
     });
 
     savetoPrefs(currentCoin);
     saveHistory(reward.credits, 'Offerwall Rewards');
-    rewardConfirm(context, reward.credits);
+    showDialog(
+        context: context,
+        builder: (context) => _onGetRewards(context, reward.credits));
     savetoDB(reward.credits);
   }
 
   @override
   void onOfferwallAvailable(bool available) {
-    print("onOfferwallAvailable : $available");
 
     setState(() {
       offerwallAvailable = available;
@@ -471,89 +526,120 @@ class _TaskState extends State<Task>
 
   @override
   void onOfferwallClosed() {
-    print("onOfferwallClosed");
   }
 
   @override
   void onOfferwallOpened() {
-    print("onOfferwallOpened");
   }
 
   @override
   void onOfferwallShowFailed(IronSourceError error) {
-    print("onOfferwallShowFailed ${error.toString()}");
   }
 
   @override
   void onRewardedVideoAdClicked(Placement placement) {
-    print("onRewardedVideoAdClicked");
   }
 
   @override
   void onRewardedVideoAdClosed() {
-    print("onRewardedVideoAdClosed");
-
   }
 
   @override
   void onRewardedVideoAdEnded() {
-    print("onRewardedVideoAdEnded");
   }
 
   @override
   void onRewardedVideoAdOpened() {
-    print("onRewardedVideoAdOpened");
   }
 
   @override
   void onRewardedVideoAdRewarded(Placement placement) {
-    print("onRewardedVideoAdRewarded: ${placement.rewardAmount}");
-    
-    int coin = 2;
-
-    setState(() {
-      currentCoin += coin;
-    });
-    savetoPrefs(currentCoin);
-    rewardConfirm(context, coin);
-    saveHistory(coin, 'Video Rewards');
-    savetoDB(coin);
   }
 
   @override
   void onRewardedVideoAdShowFailed(IronSourceError error) {
-    print("onRewardedVideoAdShowFailed : ${error.toString()}");
   }
 
   @override
   void onRewardedVideoAdStarted() {
-    print("onRewardedVideoAdStarted");
   }
 
   @override
   void onRewardedVideoAvailabilityChanged(bool available) {
-    print("onRewardedVideoAvailabilityChanged : $available");
-    setState(() {
-      rewardeVideoAvailable = available;
-    });
+
   }
 }
 
-Future<Null> rewardConfirm(BuildContext context, int coin) async {
-  await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          children: <Widget>[
-            SimpleDialogOption(
-                onPressed: () {},
-                child: Container(child: Center(child: Text('Great!!')))),
-            SimpleDialogOption(
-                onPressed: () {},
-                child: Text('Kamu Mendapatkan koin sebesar: $coin'))
-          ],
-        );
-      });
+_onGetRewards(BuildContext context, int coin) {
+  return Stack(
+    alignment: Alignment.center,
+    children: <Widget>[
+      Container(
+        width: MediaQuery.of(context).size.width - 30,
+        height: MediaQuery.of(context).size.height * 1 / 2,
+        child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    height: 150, child: Image.asset('images/icon/fire.png')),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Selamat',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child:
+                      Text('Kamu mendapatkan', style: TextStyle(fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      height: 50,
+                      child: Image.asset(
+                        'images/icon/coin.png',
+                      ),
+                    ),
+                    Text('+$coin',
+                        style: TextStyle(color: Colors.amber, fontSize: 30)),
+                  ],
+                )
+              ],
+            )),
+      ),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width - 20,
+            margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 1 / 8),
+            child: FloatingActionButton(
+              backgroundColor: Colors.amberAccent,
+              child: Icon(Icons.close),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )),
+      )
+    ],
+  );
 }
 
 Future savetoPrefs(int currentCoin) async {
@@ -568,7 +654,7 @@ Future saveHistory(int coin, String from) async {
   DbHelper dbHelper = DbHelper();
 
   DateTime now = DateTime.now();
-  String formattedDate = DateFormat('EEE d MMM').format(now);
+  String formattedDate = DateFormat('d MMM yyyy, h:mm').format(now);
 
   HistoryModel historyModel =
       HistoryModel(formattedDate, from, '+${coin.toString()}');
@@ -577,46 +663,12 @@ Future saveHistory(int coin, String from) async {
   print('object created');
 }
 
-Future savetoDBFirst(int rewards) async{
+Future savetoDBFirst(int rewards) async {
   FetchData fetchData = new FetchData();
   fetchData.updateRewardsFirst(rewards.toString());
 }
-Future savetoDB(int rewards) async{
+
+Future savetoDB(int rewards) async {
   FetchData fetchData = new FetchData();
   fetchData.updateRewards(rewards.toString());
-}
-
-
-
-
-class BannerAdListener extends IronSourceBannerListener {
-  @override
-  void onBannerAdClicked() {
-    print("onBannerAdClicked");
-  }
-
-  @override
-  void onBannerAdLeftApplication() {
-    print("onBannerAdLeftApplication");
-  }
-
-  @override
-  void onBannerAdLoadFailed(Map<String, dynamic> error) {
-    print("onBannerAdLoadFailed");
-  }
-
-  @override
-  void onBannerAdLoaded() {
-    print("onBannerAdLoaded");
-  }
-
-  @override
-  void onBannerAdScreenDismissed() {
-    print("onBannerAdScreenDismisse");
-  }
-
-  @override
-  void onBannerAdScreenPresented() {
-    print("onBannerAdScreenPresented");
-  }
 }

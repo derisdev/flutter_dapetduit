@@ -3,6 +3,7 @@ import 'package:dapetduit/ui/menuprofile/notifmenu.dart';
 import 'package:dapetduit/ui/menuprofile/phoneverification.dart';
 import 'package:dapetduit/ui/menuprofile/questionmenucreate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pollfish/flutter_pollfish.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,7 @@ class _MenuProfileState extends State<MenuProfile> {
   @override
   void initState() {
     super.initState();
+    FlutterPollfish.instance.hide();
     readDatauser();
   }
 

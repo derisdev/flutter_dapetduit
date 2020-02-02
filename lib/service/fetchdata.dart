@@ -114,6 +114,10 @@ class FetchData {
     String rewardsId = prefs.getString('rewards_id');
     String refferalCodeRefferer = prefs.getString('refferal_code_refferer');
 
+    if(refferalCodeRefferer == '') {
+      refferalCodeRefferer = 'norefferer';
+    }
+
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId?token=$token";
     var response = await http.post(baseUrl,
