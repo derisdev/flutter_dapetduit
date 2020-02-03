@@ -32,6 +32,8 @@ dependencies:
   countdown_flutter: ^0.1.1
   flutter_pollfish: ^0.2.1
   adcolony: ^1.0.0
+  marquee: ^1.3.1
+
 
 dev_dependencies:
   flutter_test:
@@ -53,10 +55,13 @@ flutter:
     - images/icon/ovo.jpeg
     - images/icon/star.png
     - images/icon/video.png
+    - images/icon/video2.png
     - images/icon/kalendar.png
     - images/icon/people.png
     - images/icon/is.png
+    - images/icon/pf.png
     - images/icon/isbanner.jpg
+    - images/icon/pfbanner.jpeg
     - images/icon/menu.png
     - images/background.jpeg
     - images/rewardscoin.png

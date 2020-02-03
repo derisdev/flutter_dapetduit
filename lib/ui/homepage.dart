@@ -60,7 +60,7 @@ class HomePageState extends State<HomePage> {
             title: Text('Misi')
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event_available, size: 35),
+            icon: Icon(Icons.monetization_on, size: 35),
             title: Text('Lebih Banyak')
           ),
           BottomNavigationBarItem(
@@ -68,7 +68,7 @@ class HomePageState extends State<HomePage> {
             title: Text('Penukaran')
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_add,size: 35),
+            icon: Icon(Icons.person_add, size: 35),
             title: Text('Undang')
           ),
         ],

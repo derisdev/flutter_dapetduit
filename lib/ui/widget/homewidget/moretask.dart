@@ -326,7 +326,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
                 child: Column(
                   children: <Widget>[
                     ListTile(
-                        leading: Image.asset('images/icon/video.png'),
+                        leading: Image.asset('images/icon/video2.png'),
                         title: Text('Tonton Video (Jaringan 2)'),
                         subtitle: Text('Dapatkan koin untuk setiap view'),
                         trailing: RaisedButton(

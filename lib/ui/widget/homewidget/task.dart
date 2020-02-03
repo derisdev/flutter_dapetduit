@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ironsource/ironsource.dart';
 import 'package:ironsource/models.dart';
+import 'package:marquee/marquee.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Task extends StatefulWidget {
@@ -28,7 +29,7 @@ class _TaskState extends State<Task>
 
   final String appKey = "b0d4544d";
 
-   bool offerwallAvailable = false;
+  bool offerwallAvailable = false;
   @override
   void initState() {
     super.initState();
@@ -211,7 +212,6 @@ class _TaskState extends State<Task>
     offerwallAvailable = await IronSource.isOfferwallAvailable();
   }
 
-
   void showOfferwall() async {
     if (await IronSource.isOfferwallAvailable()) {
       IronSource.showOfferwall();
@@ -226,7 +226,6 @@ class _TaskState extends State<Task>
           fontSize: 16.0);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +376,7 @@ class _TaskState extends State<Task>
                                         padding:
                                             const EdgeInsets.only(left: 12),
                                         child: Image.asset(
-                                          'images/icon/is.png',
+                                          'images/icon/pf.png',
                                           height: 35,
                                           width: 35,
                                         ),
@@ -385,7 +384,7 @@ class _TaskState extends State<Task>
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 10),
-                                        child: Text('Iron Source Offerwall',
+                                        child: Text('Pollfish Offerwall',
                                             style: TextStyle(fontSize: 20)),
                                       ),
                                     ],
@@ -399,7 +398,7 @@ class _TaskState extends State<Task>
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10.0),
                                       child: Image.asset(
-                                        'images/icon/isbanner.jpg',
+                                        'images/icon/pfbanner.jpeg',
                                         fit: BoxFit.fill,
                                       ),
                                     ),
@@ -453,13 +452,30 @@ class _TaskState extends State<Task>
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                                titleNotif == null
-                                    ? 'Belum ada event'
-                                    : '$titleNotif...',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                )),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Marquee(
+                                  text:
+                                  titleNotif == null
+                                      ? 'Belum ada event'
+                                      : '$titleNotif...',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                  scrollAxis: Axis.horizontal,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  blankSpace: 20.0,
+                                  velocity: 100.0,
+                                  pauseAfterRound: Duration(seconds: 1),
+                                  startPadding: 10.0,
+                                  accelerationDuration: Duration(seconds: 1),
+                                  accelerationCurve: Curves.linear,
+                                  decelerationDuration: Duration(milliseconds: 500),
+                                  decelerationCurve: Curves.easeOut,
+                                ),
+                              ),
+                            )
                           ],
                         )))),
                   ),
@@ -471,36 +487,28 @@ class _TaskState extends State<Task>
   }
 
   @override
-  void onInterstitialAdClicked() {
-  }
+  void onInterstitialAdClicked() {}
 
   @override
-  void onInterstitialAdClosed() {
-  }
+  void onInterstitialAdClosed() {}
 
   @override
-  void onInterstitialAdLoadFailed(IronSourceError error) {
-  }
+  void onInterstitialAdLoadFailed(IronSourceError error) {}
 
   @override
-  void onInterstitialAdOpened() {
-  }
+  void onInterstitialAdOpened() {}
 
   @override
-  void onInterstitialAdReady() {
-  }
+  void onInterstitialAdReady() {}
 
   @override
-  void onInterstitialAdShowFailed(IronSourceError error) {
-  }
+  void onInterstitialAdShowFailed(IronSourceError error) {}
 
   @override
-  void onInterstitialAdShowSucceeded() {
-  }
+  void onInterstitialAdShowSucceeded() {}
 
   @override
-  void onGetOfferwallCreditsFailed(IronSourceError error) {
-  }
+  void onGetOfferwallCreditsFailed(IronSourceError error) {}
 
   @override
   void onOfferwallAdCredited(OfferwallCredit reward) {
@@ -518,56 +526,43 @@ class _TaskState extends State<Task>
 
   @override
   void onOfferwallAvailable(bool available) {
-
     setState(() {
       offerwallAvailable = available;
     });
   }
 
   @override
-  void onOfferwallClosed() {
-  }
+  void onOfferwallClosed() {}
 
   @override
-  void onOfferwallOpened() {
-  }
+  void onOfferwallOpened() {}
 
   @override
-  void onOfferwallShowFailed(IronSourceError error) {
-  }
+  void onOfferwallShowFailed(IronSourceError error) {}
 
   @override
-  void onRewardedVideoAdClicked(Placement placement) {
-  }
+  void onRewardedVideoAdClicked(Placement placement) {}
 
   @override
-  void onRewardedVideoAdClosed() {
-  }
+  void onRewardedVideoAdClosed() {}
 
   @override
-  void onRewardedVideoAdEnded() {
-  }
+  void onRewardedVideoAdEnded() {}
 
   @override
-  void onRewardedVideoAdOpened() {
-  }
+  void onRewardedVideoAdOpened() {}
 
   @override
-  void onRewardedVideoAdRewarded(Placement placement) {
-  }
+  void onRewardedVideoAdRewarded(Placement placement) {}
 
   @override
-  void onRewardedVideoAdShowFailed(IronSourceError error) {
-  }
+  void onRewardedVideoAdShowFailed(IronSourceError error) {}
 
   @override
-  void onRewardedVideoAdStarted() {
-  }
+  void onRewardedVideoAdStarted() {}
 
   @override
-  void onRewardedVideoAvailabilityChanged(bool available) {
-
-  }
+  void onRewardedVideoAvailabilityChanged(bool available) {}
 }
 
 _onGetRewards(BuildContext context, int coin) {

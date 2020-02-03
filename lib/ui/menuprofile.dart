@@ -184,12 +184,6 @@ class _MenuProfileState extends State<MenuProfile> {
                                   ),
                                   Divider(),
                                   ListTile(
-                                    leading: Icon(Icons.settings),
-                                    title: Text('Pengaturan'),
-                                    trailing: Icon(Icons.chevron_right),
-                                  ),
-                                  Divider(),
-                                  ListTile(
                                     leading: Icon(Icons.help),
                                     title: Text('Bantuan'),
                                     trailing: Icon(Icons.chevron_right),
