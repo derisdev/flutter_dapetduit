@@ -189,11 +189,10 @@ class _KodeUndanganState extends State<KodeUndanganWidget> {
                       color: Color(0xff24bd64),
                       child: Row(
                         children: <Widget>[
-                          Icon(
-                            Icons.phone,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                          Container(
+                            width: 20,
+                            height: 20,
+                            child: Image.asset('images/icon/whatsapp.png')),
                           SizedBox(
                             width: 10,
                           ),

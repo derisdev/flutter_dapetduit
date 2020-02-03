@@ -60,7 +60,10 @@ class _QuestionMenuCreateState extends State<QuestionMenuCreate> {
                             color: Color(0xff24bd64),
                             child: Row(
                               children: <Widget>[
-                                Icon(Icons.phone, color: Colors.white, size: 30,),
+                                Container(
+                            width: 30,
+                            height: 30,
+                            child: Image.asset('images/icon/whatsapp.png')),
                                 SizedBox(width: 20,),
                                 Text('WhatsApp',  style: TextStyle(color: Colors.white, fontSize: 20))
                               ],
