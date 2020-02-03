@@ -15,13 +15,14 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
   bool isVerified = false;
   String username;
   String phone;
-  int currentCoin;
+  int currentCoin = 10000;
   FetchData fetchData = new FetchData();
 
   @override
   void initState() {
     super.initState();
     getCurrentCoin();
+    checkPhoneNumber();
   }
 
   Future checkPhoneNumber() async {
@@ -283,7 +284,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
       children: <Widget>[
         Container(
           width: MediaQuery.of(context).size.width-10,
-          height: MediaQuery.of(context).size.height*4/5,
+          height: 510,
           child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -291,23 +292,23 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 20,
+                    height: 15,
                   ),
                   ClipRRect(
                     borderRadius: new BorderRadius.circular(8.0),
                     child: Container(
-                        height: 150,
+                        height: 140,
                         child: Image.asset('images/withdrawcash.png')),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Text(
                     'Withdraw Koin',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Container(
                       padding: EdgeInsets.only(left: 25),
@@ -469,23 +470,23 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 20,
+                    height: 15,
                   ),
                   ClipRRect(
                     borderRadius: new BorderRadius.circular(8.0),
                     child: Container(
-                        height: 150,
+                        height: 140,
                         child: Image.asset('images/notenough.png')),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   Text(
                     'Tidak Cukup Koin',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -521,7 +522,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
       children: <Widget>[
         Container(
           width: MediaQuery.of(context).size.width - 30,
-          height: MediaQuery.of(context).size.height * 1 / 2,
+          height: 300,
           child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -529,11 +530,11 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 20,
+                    height: 15,
                   ),
                   Container(
                     width: 150,
-                    height: 150,
+                    height: 140,
                     child: FloatingActionButton(
                       elevation: 0.0,
                       backgroundColor: Colors.greenAccent,
@@ -545,14 +546,14 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Text(
                     'Harap Verifikasi Nomor Terlebih dahulu',
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -561,10 +562,10 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                         style: TextStyle(fontSize: 15)),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 7,
                   ),
                   Container(
-                    height: 40,
+                    height: 35,
                     width: MediaQuery.of(context).size.width - 20,
                     margin: EdgeInsets.only(bottom: 20),
                     child: RaisedButton(
@@ -602,8 +603,8 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                     height: 20,
                   ),
                   Container(
-                      height: 170,
-                      width: 170,
+                      height: 150,
+                      width: 150,
                       child: FloatingActionButton(
                         elevation: 0,
                         child: Icon(Icons.check, size: 100),

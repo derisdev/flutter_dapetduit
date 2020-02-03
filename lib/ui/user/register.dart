@@ -29,7 +29,6 @@ class _RegisterState extends State<Register> {
 
   FetchData fetchData = new FetchData();
 
-
   @override
   void initState() {
     super.initState();
@@ -67,17 +66,16 @@ class _RegisterState extends State<Register> {
       _isLoading = true;
     });
 
-      String refferalOwner = randomAlphaNumeric(6);
+    String refferalOwner = randomAlphaNumeric(6);
 
-    String baseUrl =
-        "https://duitrest.000webhostapp.com/api/v1/user/register";
+    String baseUrl = "https://duitrest.000webhostapp.com/api/v1/user/register";
     var response = await http.post(baseUrl, headers: {
       "Accept": "application/json"
     }, body: {
       'name': '${usernameController.text}',
       'refferal': '${refferalController.text}',
-      'email' : refferalOwner,
-      'password' : refferalOwner,
+      'email': refferalOwner,
+      'password': refferalOwner,
     });
     if (response.statusCode == 201) {
       print('refferal controller ${refferalController.text}');
@@ -93,59 +91,50 @@ class _RegisterState extends State<Register> {
       prefs.setInt('user_id', userId);
       prefs.setString('refferal_code_refferer', refferalController.text);
 
-      if(refferalController.text != "") {
+      if (refferalController.text != "") {
         prefs.setBool('haveRefferal', true);
       }
-      
 
-      
       //create dynamic Link
       refferalOwner = randomAlphaNumeric(6);
 
       prefs.setString('refferal_code_owner', refferalOwner);
 
-
       createDynamicLink(refferal: refferalOwner).then((link) {
         prefs.setString('link_refferal', link.toString());
       });
 
-      await fetchData.createRefferal(refferalOwner, userId, token);
-      await fetchData.createRewards(userId, token);
+      fetchData.createRefferal(refferalOwner, userId, token);
+      fetchData.createRewards(userId, token);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } else if (response.statusCode == 500) {
-     showToast('Username sudah ada yang menggunakan');
+      showToast('Username sudah ada yang menggunakan');
     } else if (response.statusCode == 504) {
       showToast('Server sedang ada gangguan. Coba lagi nanti');
-          
-    } else if(response.statusCode == 404) {
+    } else if (response.statusCode == 404) {
       showToast('kode Refferal tidak valid');
-    }
-     else {
+    } else {
       showToast('Gagal terhubung ke server');
     }
     setState(() {
-        print(response.statusCode);
-        print(response.body);
-        _isLoading = false;
-      });
+      print(response.statusCode);
+      print(response.body);
+      _isLoading = false;
+    });
   }
 
   void showToast(String msg) {
     Fluttertoast.showToast(
-          msg: msg,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          fontSize: 14.0,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        fontSize: 14.0,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white);
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -241,21 +230,22 @@ class _RegisterState extends State<Register> {
                               size: 50.0,
                             )
                           : Container(
-                            height: 50,
-                            child: RaisedButton(
-                                focusColor: Colors.grey,
-                                splashColor: Colors.grey,
-                                color: Color(0xff24bd64),
-                                textColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: Text('Mulai'),
-                                onPressed: () {
-                                  if (_formKey.currentState.validate()) {
+                              height: 50,
+                              child: RaisedButton(
+                                  focusColor: Colors.grey,
+                                  splashColor: Colors.grey,
+                                  color: Color(0xff24bd64),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  child: Text('Mulai'),
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
                                       saveUser();
-                                  }
-                                }),
-                          ),
+                                    }
+                                  }),
+                            ),
                     ],
                   ),
                 ),

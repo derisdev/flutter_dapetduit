@@ -472,7 +472,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
     savetoDB(newCoin);
     showDialog(
         context: context,
-        builder: (context) => _onGetRewards(context, newCoin));
+        builder: (context) => _onGetRewardsDaily(context, newCoin));
   }
 
   gifNothing() {}
@@ -491,11 +491,11 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 20,
+                    height: MediaQuery.of(context).size.height/30,
                   ),
                   Container(
                     width: 150,
-                    height: 150,
+                    height: MediaQuery.of(context).size.height/5,
                     child: FloatingActionButton(
                       elevation: 0.0,
                       backgroundColor: Colors.greenAccent,
@@ -507,7 +507,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 15,
                   ),
                   Text(
                     'Misi ini hanya berlaku satu kali',
@@ -523,10 +523,10 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
                         style: TextStyle(fontSize: 15)),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 10,
                   ),
                   Container(
-                    height: 40,
+                    height: MediaQuery.of(context).size.height/16,
                     width: MediaQuery.of(context).size.width - 20,
                     margin: EdgeInsets.only(bottom: 20),
                     child: RaisedButton(
@@ -544,7 +544,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
                             : _giftRatingFollow(
                                 false,
                                 'isFollowDone',
-                                'https://www.instagram.com/derisfl/',
+                                'https://www.instagram.com/dapetduit.app/',
                                 'Follow Instagram');
                       },
                     ),
@@ -729,6 +729,102 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
       rewardeVideoAvailable = available;
     });
   }
+  _onGetRewardsDaily(BuildContext context, int coin) {
+  return Stack(
+    alignment: Alignment.center,
+    children: <Widget>[
+      Container(
+        width: MediaQuery.of(context).size.width - 30,
+        height: 400,
+        child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                    height: 140, child: Image.asset('images/icon/fire.png')),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Selamat',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child:
+                      Text('Kamu mendapatkan', style: TextStyle(fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      height: 50,
+                      child: Image.asset(
+                        'images/icon/coin.png',
+                      ),
+                    ),
+                    Text('+$coin',
+                        style: TextStyle(color: Colors.amber, fontSize: 30)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text('Ingin mendapatkan lebih banyak koin dengan menonton video pendek?'),
+                ),
+                SizedBox(height: 5,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      height: 50,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        color: Colors.white.withOpacity(0.5),
+                        child: Text('Tidak\nSekarang', style: TextStyle(color: Colors.white, fontSize: 15),textAlign: TextAlign.center,),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                   SizedBox(width: 20),
+                   Container(
+                      height: 50,
+                      width: 100,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        color: Colors.amber,
+                        child: Text('Lanjut', style: TextStyle(color: Colors.white, fontSize: 20)),
+                        onPressed: (){
+                        Navigator.pop(context);
+                        showRewardedVideo();
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )),
+      ),
+    ],
+  );
+}
 }
 
 class BannerAdListener extends IronSourceBannerListener {
@@ -762,6 +858,7 @@ class BannerAdListener extends IronSourceBannerListener {
   void onBannerAdScreenPresented() {
     print("onBannerAdScreenPresented");
   }
+  
 }
 
 _onGetRewards(BuildContext context, int coin) {
@@ -778,19 +875,19 @@ _onGetRewards(BuildContext context, int coin) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Container(
-                    height: 150, child: Image.asset('images/icon/fire.png')),
+                    height: 140, child: Image.asset('images/icon/fire.png')),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Text(
                   'Selamat',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -835,3 +932,5 @@ _onGetRewards(BuildContext context, int coin) {
     ],
   );
 }
+
+

@@ -579,19 +579,19 @@ _onGetRewards(BuildContext context, int coin) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 14,
                 ),
                 Container(
-                    height: 150, child: Image.asset('images/icon/fire.png')),
+                    height: 140, child: Image.asset('images/icon/fire.png')),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Text(
                   'Selamat',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20),
