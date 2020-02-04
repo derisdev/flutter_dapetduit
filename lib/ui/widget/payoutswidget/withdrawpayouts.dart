@@ -61,6 +61,8 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
   }
 
   Future withdraw(String coin, String via, String amount) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
     if(mounted){
       setState(() {
       isLoading = true;
@@ -72,17 +74,22 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
                 context: context,
                 builder: (context) =>
                     _onWithdrawSuccess(context));
+
+      setState(() {
+       currentCoin -= int.parse(coin); 
+      });
+    prefs.setInt('coin', currentCoin);
+
+    fetchData.updateRewards(currentCoin.toString());
+      
       }
     });
     if(mounted){
       setState(() {
       isLoading = false;
-      currentCoin -= int.parse(coin);
     });
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('coin', currentCoin);
-
+    
   }
 
   Future onClickPayment(String time, String koin, String via, String amount) async {

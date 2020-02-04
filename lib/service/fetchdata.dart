@@ -87,6 +87,7 @@ class FetchData {
       int rewardsId = jsonData['rewards']['id'];
 
       prefs.setString('rewards_id', rewardsId.toString());
+      prefs.setInt('fromrefferal', 0);
     }
     print(response.statusCode);
     print(response.body);
@@ -136,6 +137,7 @@ class FetchData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String rewardsId = prefs.getString('rewards_id');
     int currentCoin = prefs.getInt('coin');
+    int fromRefferal = prefs.getInt('fromrefferal');
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId";
@@ -143,19 +145,18 @@ class FetchData {
         headers: {"Accept": "application/json"});
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      String newRewards = jsonData['rewards']['rewards'];
-      int newReward = int.parse(newRewards);
-      if(newReward > currentCoin) {
-      prefs.setInt('coin', newReward);
+      String newRewardsFromRefferal = jsonData['rewards']['fromrefferal'];
+      int newRewardFromRefferal = int.parse(newRewardsFromRefferal);
+      if(newRewardFromRefferal > fromRefferal) {
+      prefs.setInt('coin', currentCoin+=newRewardFromRefferal);
+      prefs.setInt('fromrefferal', newRewardFromRefferal);
       DbHelper dbHelper = DbHelper();
 
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('EEE d MMM').format(now);
 
-  int newRewar = int.parse(newRewards)- currentCoin;
-
   HistoryModel historyModel =
-      HistoryModel(formattedDate, 'Refferal', '+$newRewar');
+      HistoryModel(formattedDate, 'Refferal', '+$newRewardFromRefferal');
   await dbHelper.insert(historyModel);
 
   print('object created');
