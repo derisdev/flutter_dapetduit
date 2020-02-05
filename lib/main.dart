@@ -1,5 +1,4 @@
 import 'package:dapetduit/ui/splash.dart';
-import 'package:dapetduit/ui/widget/homewidget/payouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

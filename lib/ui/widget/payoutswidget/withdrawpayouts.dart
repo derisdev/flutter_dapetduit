@@ -80,7 +80,7 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
       });
     prefs.setInt('coin', currentCoin);
 
-    fetchData.updateRewards(currentCoin.toString());
+    fetchData.updateRewards(currentCoin.toString(), 'minus withdraw');
       
       }
     });

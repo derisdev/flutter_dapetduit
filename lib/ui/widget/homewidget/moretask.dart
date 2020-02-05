@@ -1,5 +1,4 @@
 import 'package:adcolony/AdColony.dart';
-import 'package:adcolony/AdColonyBanner.dart';
 import 'package:countdown_flutter/countdown_flutter.dart';
 import 'package:dapetduit/ui/history.dart';
 import 'package:dapetduit/ui/menuprofile.dart';
@@ -71,7 +70,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
             });
             savetoPrefs(currentCoin);
             saveHistory(20, 'Video Rewards');
-            savetoDB(20);
+            savetoDB(20, 'Video Rewards');
             showDialog(
                 context: context,
                 builder: (context) => _onGetRewards(context, 20));
@@ -469,7 +468,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
     });
     savetoPrefs(currentCoin);
     saveHistory(newCoin, from);
-    savetoDB(newCoin);
+    savetoDB(newCoin, from);
     showDialog(
         context: context,
         builder: (context) => _onGetRewardsDaily(context, newCoin));
@@ -578,7 +577,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
     });
     savetoPrefs(currentCoin);
     saveHistory(500, from);
-    savetoDB(500);
+    savetoDB(500, from);
     showDialog(
         context: context, builder: (context) => _onGetRewards(context, 500));
   }
@@ -699,7 +698,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
     showDialog(
         context: context,
         builder: (context) => _onGetRewards(context, 20));
-    savetoDB(20);
+    savetoDB(20, 'Video Rewards');
   }
  
   @override

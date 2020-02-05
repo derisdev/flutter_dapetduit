@@ -88,12 +88,13 @@ class FetchData {
 
       prefs.setString('rewards_id', rewardsId.toString());
       prefs.setInt('fromrefferal', 0);
+      prefs.setInt('fromanother', 0);
     }
     print(response.statusCode);
     print(response.body);
   }
 
-  Future updateRewardsFirst(String rewards) async {
+  Future updateRewardsFirst(String rewards, String from) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     String rewardsId = prefs.getString('rewards_id');
@@ -102,14 +103,14 @@ class FetchData {
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId?token=$token";
     var response = await http.post(baseUrl,
         headers: {"Accept": "application/json"},
-        body: {'rewards': rewards, 'refferal': 'norefferal','_method': 'PATCH'});
+        body: {'rewards': rewards, 'refferal': 'norefferal', 'from': from,'_method': 'PATCH'});
     if (response.statusCode == 200) {
       print('rewards updated');
     }
     print(response.statusCode);
     print(response.body);
   }
-  Future updateRewards(String rewards) async {
+  Future updateRewards(String rewards, String from) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     String rewardsId = prefs.getString('rewards_id');
@@ -123,7 +124,7 @@ class FetchData {
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId?token=$token";
     var response = await http.post(baseUrl,
         headers: {"Accept": "application/json"},
-        body: {'rewards': rewards, 'refferal': refferalCodeRefferer,'_method': 'PATCH'});
+        body: {'rewards': rewards, 'from': from, 'refferal': refferalCodeRefferer,'_method': 'PATCH'});
     if (response.statusCode == 200) {
       print('rewards updated');
     }
@@ -138,6 +139,12 @@ class FetchData {
     String rewardsId = prefs.getString('rewards_id');
     int currentCoin = prefs.getInt('coin');
     int fromRefferal = prefs.getInt('fromrefferal');
+    int fromAnother = prefs.getInt('fromanother');
+
+       DbHelper dbHelper = DbHelper();
+
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('EEE d MMM').format(now);
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId";
@@ -146,20 +153,26 @@ class FetchData {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       String newRewardsFromRefferal = jsonData['rewards']['fromrefferal'];
+      String newRewardsFromAnother = jsonData['rewards']['fromanother'];
+
       int newRewardFromRefferal = int.parse(newRewardsFromRefferal);
+      int newRewardFromAnother = int.parse(newRewardsFromAnother);
+      
       if(newRewardFromRefferal > fromRefferal) {
       prefs.setInt('coin', currentCoin+=newRewardFromRefferal);
       prefs.setInt('fromrefferal', newRewardFromRefferal);
-      DbHelper dbHelper = DbHelper();
-
-  DateTime now = DateTime.now();
-  String formattedDate = DateFormat('EEE d MMM').format(now);
-
   HistoryModel historyModel =
-      HistoryModel(formattedDate, 'Refferal', '+$newRewardFromRefferal');
+      HistoryModel(formattedDate, 'Misi Refferal', '+$newRewardFromRefferal');
   await dbHelper.insert(historyModel);
 
-  print('object created');
+      }
+      if(newRewardFromAnother > fromAnother) {
+      prefs.setInt('coin', currentCoin+=newRewardFromAnother);
+      prefs.setInt('fromanother', newRewardFromAnother);
+  HistoryModel historyModel =
+      HistoryModel(formattedDate, 'Misi Laninnya', '+$newRewardFromRefferal');
+  await dbHelper.insert(historyModel);
+
       }
     }
     print(response.statusCode);

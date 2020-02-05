@@ -1,4 +1,3 @@
-import 'package:adcolony/AdColony.dart';
 import 'package:dapetduit/ui/widget/homewidget/moretask.dart';
 import 'package:dapetduit/ui/widget/homewidget/payouts.dart';
 import 'package:dapetduit/ui/widget/homewidget/invite.dart';

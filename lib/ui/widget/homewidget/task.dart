@@ -115,6 +115,17 @@ class _TaskState extends State<Task>
           String _logText =
               'Survey Received: - SurveyInfo with CPA: ${surveyCharacteristics[0]} and IR: ${surveyCharacteristics[1]} and LOI: ${surveyCharacteristics[2]} and SurveyClass: ${surveyCharacteristics[3]} and RewardName: ${surveyCharacteristics[4]}  and RewardValue: ${surveyCharacteristics[5]}';
           print('Received $_logText');
+          setState(() {
+            currentCoin += int.parse(surveyCharacteristics[5]);
+          });
+
+          savetoPrefs(currentCoin);
+          saveHistory(int.parse(surveyCharacteristics[5]), 'Survey Rewards');
+          savetoDB(int.parse(surveyCharacteristics[5]), 'Survey Rewards');
+          showDialog(
+              context: context,
+              builder: (context) =>
+                  _onGetRewards(context, int.parse(surveyCharacteristics[5])));
         }
       });
 
@@ -125,17 +136,7 @@ class _TaskState extends State<Task>
           String _logText =
               'Survey Completed: - SurveyInfo with CPA: ${surveyCharacteristics[0]} and IR: ${surveyCharacteristics[1]} and LOI: ${surveyCharacteristics[2]} and SurveyClass: ${surveyCharacteristics[3]} and RewardName: ${surveyCharacteristics[4]}  and RewardValue: ${surveyCharacteristics[5]}';
           print('complete $_logText');
-          setState(() {
-            currentCoin += int.parse(surveyCharacteristics[5]);
-          });
-
-          savetoPrefs(currentCoin);
-          saveHistory(int.parse(surveyCharacteristics[5]), 'Survey Rewards');
-          savetoDB(int.parse(surveyCharacteristics[5]));
-          showDialog(
-              context: context,
-              builder: (context) =>
-                  _onGetRewards(context, int.parse(surveyCharacteristics[5])));
+         
         }
       });
 
@@ -521,7 +522,7 @@ class _TaskState extends State<Task>
     showDialog(
         context: context,
         builder: (context) => _onGetRewards(context, reward.credits));
-    savetoDB(reward.credits);
+    savetoDB(reward.credits, 'Offerwall Rewards');
   }
 
   @override
@@ -660,10 +661,10 @@ Future saveHistory(int coin, String from) async {
 
 Future savetoDBFirst(int rewards) async {
   FetchData fetchData = new FetchData();
-  fetchData.updateRewardsFirst(rewards.toString());
+  fetchData.updateRewardsFirst(rewards.toString(), 'refferal');
 }
 
-Future savetoDB(int rewards) async {
+Future savetoDB(int rewards, String from) async {
   FetchData fetchData = new FetchData();
-  fetchData.updateRewards(rewards.toString());
+  fetchData.updateRewards(rewards.toString(), from);
 }

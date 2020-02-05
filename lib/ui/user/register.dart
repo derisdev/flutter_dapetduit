@@ -36,6 +36,12 @@ class _RegisterState extends State<Register> {
     refferalController.text = refferalCode;
   }
 
+@override
+void dispose() { 
+  usernameController.dispose();
+  refferalController.dispose();
+  super.dispose();
+}
   void fetchLinkData() async {
     var link = await FirebaseDynamicLinks.instance.getInitialLink();
 

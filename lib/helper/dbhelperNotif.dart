@@ -56,7 +56,7 @@ class DBHelperNotif {
 
   Future<List<Notif>> getAllNotif() async {
     final db = await database;
-    final res = await db.rawQuery("SELECT * FROM Notif");
+    final res = await db.rawQuery("SELECT * FROM Notif ORDER BY id DESC");
 
     List<Notif> list =
         res.isNotEmpty ? res.map((c) => Notif.fromJson(c)).toList() : null;

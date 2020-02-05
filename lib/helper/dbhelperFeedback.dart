@@ -55,7 +55,7 @@ class DBHelperFeedback {
 
   Future<List<FeedbackModel>> getAllFeedback() async {
     final db = await database;
-    final res = await db.rawQuery("SELECT * FROM Feedback");
+    final res = await db.rawQuery("SELECT * FROM Feedback ORDER BY id DESC");
 
     List<FeedbackModel> list =
         res.isNotEmpty ? res.map((c) => FeedbackModel.fromJson(c)).toList() : null;
