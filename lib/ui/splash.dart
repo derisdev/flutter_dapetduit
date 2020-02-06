@@ -24,13 +24,11 @@ class _SplashState extends State<Splash> {
 
     checkLogin().then(setcondition);
 
-    Timer(
-        Duration(seconds: 2),
-        () => checkInternet().then((internet) {
+    checkInternet().then((internet) {
               if (internet != null && internet) {
                 initAllDataFromDB();
                 Timer(
-                    Duration(seconds: 1),
+                    Duration(seconds: 2),
                     () => Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (BuildContext context) {
                           return login ? HomePage() : Register();
@@ -47,7 +45,7 @@ class _SplashState extends State<Splash> {
                     backgroundColor: Colors.grey,
                     textColor: Colors.white);
               }
-            }));
+            });
   }
 
   Future<bool> checkLogin() async {

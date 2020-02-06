@@ -144,7 +144,7 @@ class FetchData {
        DbHelper dbHelper = DbHelper();
 
   DateTime now = DateTime.now();
-  String formattedDate = DateFormat('EEE d MMM').format(now);
+  String formattedDate = DateFormat('d MMM yyyy, h:mm').format(now);
 
     String baseUrl =
         "https://duitrest.000webhostapp.com/api/v1/rewards/$rewardsId";
@@ -161,6 +161,7 @@ class FetchData {
       if(newRewardFromRefferal > fromRefferal) {
       prefs.setInt('coin', currentCoin+=newRewardFromRefferal);
       prefs.setInt('fromrefferal', newRewardFromRefferal);
+      updateRewards(newRewardsFromRefferal, 'Misi Refferal');
   HistoryModel historyModel =
       HistoryModel(formattedDate, 'Misi Refferal', '+$newRewardFromRefferal');
   await dbHelper.insert(historyModel);
@@ -169,8 +170,9 @@ class FetchData {
       if(newRewardFromAnother > fromAnother) {
       prefs.setInt('coin', currentCoin+=newRewardFromAnother);
       prefs.setInt('fromanother', newRewardFromAnother);
+      updateRewards(newRewardsFromAnother, 'Misi Lainnya');
   HistoryModel historyModel =
-      HistoryModel(formattedDate, 'Misi Laninnya', '+$newRewardFromRefferal');
+      HistoryModel(formattedDate, 'Misi Lainnya', '+$newRewardFromAnother');
   await dbHelper.insert(historyModel);
 
       }

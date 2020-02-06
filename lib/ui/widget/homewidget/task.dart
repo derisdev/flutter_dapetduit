@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dapetduit/helper/dbhelperNotif.dart';
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:dapetduit/ui/menuprofile.dart';
@@ -82,10 +84,13 @@ class _TaskState extends State<Task>
       });
 
       savetoPrefs(currentCoin);
-      saveHistory(500, 'Refferal');
-      savetoDBFirst(500);
+      saveHistory('+500', 'Refferal');
       showDialog(
           context: context, builder: (context) => _onGetRewards(context, 500));
+      Timer(Duration(seconds: 3), (){
+        savetoDBFirst(500);
+      });
+
     }
 
     prefs.setBool('haveRefferal', false);
@@ -120,7 +125,7 @@ class _TaskState extends State<Task>
           });
 
           savetoPrefs(currentCoin);
-          saveHistory(int.parse(surveyCharacteristics[5]), 'Survey Rewards');
+          saveHistory('+${surveyCharacteristics[5]}', 'Survey Rewards');
           savetoDB(int.parse(surveyCharacteristics[5]), 'Survey Rewards');
           showDialog(
               context: context,
@@ -518,7 +523,7 @@ class _TaskState extends State<Task>
     });
 
     savetoPrefs(currentCoin);
-    saveHistory(reward.credits, 'Offerwall Rewards');
+    saveHistory('+${reward.credits}', 'Offerwall Rewards');
     showDialog(
         context: context,
         builder: (context) => _onGetRewards(context, reward.credits));
@@ -646,14 +651,14 @@ Future savetoPrefs(int currentCoin) async {
   print('saved $currentCoin');
 }
 
-Future saveHistory(int coin, String from) async {
+Future saveHistory(String coin, String from) async {
   DbHelper dbHelper = DbHelper();
 
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('d MMM yyyy, h:mm').format(now);
 
   HistoryModel historyModel =
-      HistoryModel(formattedDate, from, '+${coin.toString()}');
+      HistoryModel(formattedDate, from, coin);
   await dbHelper.insert(historyModel);
 
   print('object created');
@@ -661,7 +666,7 @@ Future saveHistory(int coin, String from) async {
 
 Future savetoDBFirst(int rewards) async {
   FetchData fetchData = new FetchData();
-  fetchData.updateRewardsFirst(rewards.toString(), 'refferal');
+  fetchData.updateRewardsFirst(rewards.toString(), 'Undangan Refferal');
 }
 
 Future savetoDB(int rewards, String from) async {

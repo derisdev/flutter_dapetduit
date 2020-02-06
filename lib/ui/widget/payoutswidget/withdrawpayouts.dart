@@ -1,5 +1,6 @@
 import 'package:dapetduit/service/fetchdata.dart';
 import 'package:dapetduit/ui/menuprofile/phoneverification.dart';
+import 'package:dapetduit/ui/widget/homewidget/task.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -79,8 +80,8 @@ class _WithdrawPayoutsState extends State<WithdrawPayouts> {
        currentCoin -= int.parse(coin); 
       });
     prefs.setInt('coin', currentCoin);
-
-    fetchData.updateRewards(currentCoin.toString(), 'minus withdraw');
+    saveHistory('-$coin', 'Withdraw');
+    fetchData.updateRewards('-$coin', 'minus withdraw');
       
       }
     });

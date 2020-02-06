@@ -69,7 +69,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
               currentCoin += 20;
             });
             savetoPrefs(currentCoin);
-            saveHistory(20, 'Video Rewards');
+            saveHistory('+20', 'Video Rewards');
             savetoDB(20, 'Video Rewards');
             showDialog(
                 context: context,
@@ -467,7 +467,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
       currentCoin += newCoin;
     });
     savetoPrefs(currentCoin);
-    saveHistory(newCoin, from);
+    saveHistory('+$newCoin', from);
     savetoDB(newCoin, from);
     showDialog(
         context: context,
@@ -576,7 +576,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
       currentCoin += 500;
     });
     savetoPrefs(currentCoin);
-    saveHistory(500, from);
+    saveHistory('+500', from);
     savetoDB(500, from);
     showDialog(
         context: context, builder: (context) => _onGetRewards(context, 500));
@@ -694,7 +694,7 @@ class _MoreTaskState extends State<MoreTask> with IronSourceListener , WidgetsBi
     });
 
     savetoPrefs(currentCoin);
-    saveHistory(20, 'Video Rewards');
+    saveHistory('+20', 'Video Rewards');
     showDialog(
         context: context,
         builder: (context) => _onGetRewards(context, 20));

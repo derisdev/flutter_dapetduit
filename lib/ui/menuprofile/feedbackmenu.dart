@@ -84,19 +84,6 @@ class _FeedbackMenuState extends State<FeedbackMenu> {
                 Navigator.pop(context);
               },
             ),
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: IconButton(
-                  icon: Icon(Icons.add, size: 30),
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => QuestionMenuCreate()
-                    ));
-                  },
-                ),
-              )
-            ],
           ),
           body: Container(
             height: MediaQuery.of(context).size.height*7/8+1,
@@ -189,7 +176,7 @@ class _FeedbackMenuState extends State<FeedbackMenu> {
                             children: <Widget>[
                               Text('Q: ', style: TextStyle(fontWeight: FontWeight.bold),),
                               SizedBox(width: 10,),
-                              Flexible(child: Text('Kenapa fitur checkin menghilang?')),
+                              Flexible(child: Text(snapshot.data[index].question)),
                             ],
                           ),
                           SizedBox(height: 10,),
@@ -197,7 +184,7 @@ class _FeedbackMenuState extends State<FeedbackMenu> {
                             children: <Widget>[
                               Text('A: ', style: TextStyle(fontWeight: FontWeight.bold)),
                               SizedBox(width: 10,),
-                              Flexible(child: Text('Hello, kalo kamu punya akun lain sedang checkin balaa al bla')),
+                              Flexible(child: Text(snapshot.data[index].answer)),
                             ],
                           ),
                         ],
